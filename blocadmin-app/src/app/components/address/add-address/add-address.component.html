@@ -1,1 +1,52 @@
-<p>add-address works!</p>
+<div class="container">
+  <!--  <app-header></app-header>-->
+  <!--  <app-root></app-root>-->
+
+
+  <div class="row">
+    <div class="col-1" style="border: 2px solid; border-color: rgb(0, 38, 255);">
+      <app-leftmenu></app-leftmenu>
+    </div>
+
+    <div class="col-11 pt-3" style="border: 2px solid; border-color: rgb(0, 38, 255);">
+      <form [formGroup] = "formdata" (ngSubmit) = "createAddress(formdata.value)" >
+        <div class="form-row ">
+          <div class="col-2 text-right align-middle">
+            <label for="InputCity">City</label>
+          </div>
+          <div class="col-10">
+            <input type="text" class="form-control" id="InputCity"  placeholder="Enter city name" formControlName="city" required >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="InputRaion">Raion</label>
+          <input type="text" class="form-control" id="InputRaion"  placeholder="Enter raion" formControlName="raion" required>
+
+        </div>
+        <div class="form-group">
+          <label for="InputStreet">Street</label>
+          <input type="text" class="form-control" id="InputStreet"  placeholder="Enter street" formControlName="street">
+
+        </div>
+        <div class="form-group">
+          <label for="InputHouse">House number</label>
+          <input type="text" class="form-control" id="InputHouse" placeholder="Enter house number" formControlName="houseNumber" maxlength="10">
+        </div>
+
+        <button type="submit" class="btn btn-primary" (click)="createAddress(formdata)">Submit</button>
+      </form>
+    </div>
+
+  </div>
+  <p>
+    City entered is : {{city}}
+  </p>
+
+  <app-footer></app-footer>
+
+  <a href="${pageContext.request.contextPath}/">Back to main page</a>
+</div>
+
+
+
+
