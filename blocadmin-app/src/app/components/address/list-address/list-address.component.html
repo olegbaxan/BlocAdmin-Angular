@@ -1,45 +1,57 @@
-<div class="container">
+<div class="container-fluid">
 <!--    <app-header></app-header>-->
 <!--    <app-root></app-root>-->
 
   <div class="row">
-    <div class="col-1" style="border: 2px solid; border-color: rgb(0, 38, 255);">
-      <app-leftmenu></app-leftmenu>
-    </div>
-
-    <div class="col-11" style="border: 2px solid; border-color: rgb(0, 38, 255);">
-      <div class="row">
+    <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255);">
       <div>
-        <a class="btn btn-danger btn-sm" routerLink="add">Add</a>
+        <a class="btn btn-light btn-lg m-3" routerLink="add"><img src="../../../assets/img/new1.png">Add New</a>
       </div>
 
       <div>
-        <table class="table table-bordered table-hover table-primary table-responsive table-responsive-sm">
+        <table class="table table-bordered table-hover table-primary table-responsive table-responsive-lg">
           <thead class="thead-dark">
-          <tr align="center">
-            <th>City</th>
-            <th>Raion</th>
-            <th>Street</th>
-            <th>House Number</th>
-            <th colspan=2>Quick Edit</th>
-          </tr>
-
+            <tr align="center" style="font-size: 20px">
+              <th class="col-2">City</th>
+              <th class="col-2">Raion</th>
+              <th class="col-3">Street</th>
+              <th class="col-2">House Number</th>
+              <th class="col-2" colspan=2>Quick Edit</th>
+            </tr>
           </thead>
 
-          <tr *ngFor="let address of addresses" align="center">
+          <tr *ngFor="let address of addresses" align="center" style="font-size: 14px">
             <td>{{address.city}}</td>
             <td>{{address.raion}}</td>
             <td>{{address.street}}</td>
             <td>{{address.houseNumber}}</td>
-            <td align="center"><a class="btn btn-primary btn-sm" (click)="deleteAddress(address.addressid)">Delete</a></td>
-            <td align="center"><a class="btn btn-danger btn-sm" routerLink="{{address.addressid}}">Edit</a></td>
+            <td align="center"><a class="btn btn-lg" (click)="deleteAddress(address.addressid)"><img src="../../../assets/img/delete1.png">Delete</a></td>
+            <td align="center"><a class="btn btn-lg" routerLink="{{address.addressid}}"><img src="../../../assets/img/edit1.png">Edit</a></td>
+<!--            <td align="center"><a class="btn btn-default btn-sm" (click)="toggleEdit(address.addressid)"><img src="../../../assets/img/edit1.png">Edit</a></td>-->
           </tr>
+<!--          <tr>-->
+<!--            <td colspan="6">-->
+<!--              <app-add-address *ngIf="addNew"></app-add-address>-->
+<!--              <app-edit-address *ngIf="edit"></app-edit-address>-->
+<!--            </td>-->
+<!--          </tr>-->
         </table>
-      </div>
+
+<!--          <button type="button" class="btn btn-default m-4" (click)="toggleAddNew()">-->
+<!--          <button type="button" class="btn btn-default m-4" routerLink="add">-->
+<!--            <img src="../../../assets/img/new1.png">New-->
+<!--          </button>-->
+<!--        <button type="button" class="btn btn-default m-4" (click)="toggleAddNew()">-->
+<!--          <img src="../../../assets/img/enter.png"> Enter-->
+<!--        </button>-->
+<!--        <button type="button" class="btn btn-default m-4" (click)="toggleCancel()">-->
+<!--          <img src="../../../assets/img/cancel1.png"> Cancel-->
+<!--        </button>-->
+        </div>
+
     </div>
 
-  </div>
-  <app-footer></app-footer>
-  <a href="${pageContext.request.contextPath}/">Back to main page</a>
+<!--  <app-footer></app-footer>-->
+<!--  <a href="${pageContext.request.contextPath}/">Back to main page</a>-->
 </div>
 </div>

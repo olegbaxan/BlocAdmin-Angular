@@ -11,6 +11,7 @@ import {HeaderComponent} from "./components/header/header.component";
 import {HttpClientModule} from "@angular/common/http";
 import {ListAddressComponent } from './components/address/list-address/list-address.component';
 import {EditAddressComponent } from './components/address/edit-address/edit-address.component';
+import {NgbAccordionModule, NgbAlertModule, NgbModule, NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -28,7 +29,10 @@ import {EditAddressComponent } from './components/address/edit-address/edit-addr
         AppRoutingModule,
         HttpClientModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+        NgbPaginationModule,
+        NgbAlertModule,
+        NgbAccordionModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

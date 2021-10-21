@@ -1,14 +1,14 @@
 <div class="container">
 
-  <app-header></app-header>
+<!--  <app-header></app-header>-->
 
-  <div class="row">
-    <div class="col-1" style="border: 2px solid; border-color: rgb(0, 38, 255);">
-      <app-leftmenu></app-leftmenu>
-    </div>
+<!--  <div class="row" *ngIf="address" style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">-->
+<!--    <div class="col-1" style="border: 2px solid; border-color: rgb(0, 38, 255);">-->
+<!--      <app-leftmenu></app-leftmenu>-->
+<!--    </div>-->
 
-    <div class="col-11 pt-3 " *ngIf="address" style="border: 2px solid; border-color: rgb(0, 38, 255);">
-      <h4>Person attributes to Edit</h4>
+    <div class="col-12" *ngIf="address" style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+      <h4>Address attributes to Edit</h4>
       <form (ngSubmit)="updateAddress(playlistForm)" #playlistForm="ngForm">
         <div class="form-group">
           <label for="city">City</label>
@@ -25,20 +25,20 @@
         </div>
         <div class="form-group">
           <label for="house">Phone number</label>
-          <input type="tel" class="form-control" id="house" placeholder="Enter house number" [(ngModel)]="address.houseNumber" name="houseNumber">
+          <input type="text" class="form-control" id="house" placeholder="Enter house number" [(ngModel)]="address.houseNumber" name="houseNumber">
         </div>
-        <button type="submit" class="btn btn-primary" (click)="updateAddress(playlistForm)">Submit</button>
-        <!--        <button type="submit" class="btn btn-primary" value="submit">Submit</button>-->
+        <button type="submit" class="btn btn-primary m-3" (click)="updateAddress(playlistForm)">Submit</button>
+        <button type="cancel" class="btn btn-danger m-3" routerLink="/address">Cancel</button>
 
       </form>
 
     </div>
   </div>
-  <app-footer></app-footer>
+<!--  <app-footer></app-footer>-->
 
-  <a href="${pageContext.request.contextPath}/">Back to main page</a>
+<!--  <a href="${pageContext.request.contextPath}/">Back to main page</a>-->
 
-</div>
+<!--</div>-->
 <div *ngIf="!address">
   <br />
   <p>Cannot access this Address...</p>

@@ -31,7 +31,7 @@ export class EditAddressComponent implements OnInit {
         data => {
           this.address = data;
           // console.log("AddressID: "+this.address.addressid)
-          console.log(data);
+          // console.log(data);
         },
         error => {
           console.log(error);

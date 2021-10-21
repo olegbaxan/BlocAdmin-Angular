@@ -4,47 +4,47 @@
 
 
   <div class="row">
-    <div class="col-1" style="border: 2px solid; border-color: rgb(0, 38, 255);">
-      <app-leftmenu></app-leftmenu>
-    </div>
+<!--    <div class="col-1" style="border: 2px solid; border-color: rgb(0, 38, 255);">-->
+<!--      <app-leftmenu></app-leftmenu>-->
+<!--    </div>-->
 
-    <div class="col-11 pt-3" style="border: 2px solid; border-color: rgb(0, 38, 255);">
+    <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px">
+      <h4>New Address Add</h4>
       <form [formGroup] = "formdata" (ngSubmit) = "createAddress(formdata.value)" >
-        <div class="form-row ">
-          <div class="col-2 text-right align-middle">
-            <label for="InputCity">City</label>
-          </div>
-          <div class="col-10">
-            <input type="text" class="form-control" id="InputCity"  placeholder="Enter city name" formControlName="city" required >
-          </div>
+        <div class="form-group">
+          <label for="InputCity">City</label>
+          <input type="text" class="form-control" id="InputCity"  placeholder="Enter city name" formControlName="city" required >
         </div>
+
         <div class="form-group">
           <label for="InputRaion">Raion</label>
           <input type="text" class="form-control" id="InputRaion"  placeholder="Enter raion" formControlName="raion" required>
 
         </div>
+
         <div class="form-group">
           <label for="InputStreet">Street</label>
-          <input type="text" class="form-control" id="InputStreet"  placeholder="Enter street" formControlName="street">
+          <input type="text" class="form-control" id="InputStreet"  placeholder="Enter street" formControlName="street" required>
 
         </div>
         <div class="form-group">
           <label for="InputHouse">House number</label>
-          <input type="text" class="form-control" id="InputHouse" placeholder="Enter house number" formControlName="houseNumber" maxlength="10">
+          <input type="text" class="form-control" id="InputHouse" placeholder="Enter house number" formControlName="houseNumber" maxlength="10" required>
         </div>
 
-        <button type="submit" class="btn btn-primary" (click)="createAddress(formdata)">Submit</button>
+        <button type="submit" class="btn btn-primary m-3" (click)="createAddress(formdata)">Submit</button>
+        <button type="cancel" class="btn btn-danger m-3" routerLink="/address">Cancel</button>
       </form>
     </div>
 
   </div>
-  <p>
-    City entered is : {{city}}
-  </p>
+<!--  <p>-->
+<!--    City entered is : {{city}}-->
+<!--  </p>-->
 
-  <app-footer></app-footer>
+<!--  <app-footer></app-footer>-->
 
-  <a href="${pageContext.request.contextPath}/">Back to main page</a>
+<!--  <a href="${pageContext.request.contextPath}/">Back to main page</a>-->
 </div>
 
 
