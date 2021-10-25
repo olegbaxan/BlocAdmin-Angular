@@ -8,27 +8,42 @@
 <!--    </div>-->
 
     <div class="col-12" *ngIf="address" style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
-      <h4>Address attributes to Edit</h4>
+      <h2 class="justify-content-center m-3">Address attributes to Edit</h2>
       <form (ngSubmit)="updateAddress(playlistForm)" #playlistForm="ngForm">
-        <div class="form-group">
-          <label for="city">City</label>
-          <input type="text" class="form-control" id="city"  [(ngModel)]="address.city" name="city"   required>
+        <div class="form-group form-group-sm col-sm-6 m-5 ">
+          <div class="row">
+            <label for="city" class="col-sm-3 col-form-label">City</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="city"  [(ngModel)]="address.city" name="city"   required>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="raion">Raion</label>
-          <input type="text" class="form-control" id="raion"  placeholder="Enter raion" [(ngModel)]="address.raion" name="raion">
-
+        <div class="form-group form-group-sm col-sm-6 m-5">
+          <div class="row">
+            <label for="raion" class="col-sm-3 col-form-label">Raion</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="raion"  placeholder="Enter raion" [(ngModel)]="address.raion" name="raion">
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="street">Street</label>
-          <input type="text" class="form-control" id="street"  placeholder="Enter street" [(ngModel)]="address.street" name="street">
+        <div class="form-group form-group-sm col-sm-6 m-5">
+          <div class="row">
+            <label for="street" class="col-sm-3 col-form-label">Street</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="street"  placeholder="Enter street" [(ngModel)]="address.street" name="street">
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="house">Phone number</label>
-          <input type="text" class="form-control" id="house" placeholder="Enter house number" [(ngModel)]="address.houseNumber" name="houseNumber">
+        <div class="form-group form-group-sm col-sm-6 m-5">
+          <div class="row">
+            <label for="house" class="col-sm-3 col-form-label">House number</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="house" placeholder="Enter house number" [(ngModel)]="address.houseNumber" name="houseNumber">
+            </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary m-3" (click)="updateAddress(playlistForm)">Submit</button>
-        <button type="cancel" class="btn btn-danger m-3" routerLink="/address">Cancel</button>
+        <button type="submit" class="btn btn-success m-5 btn-lg" (click)="updateAddress(playlistForm)">Submit</button>
+        <button type="cancel" class="btn btn-danger m-5  btn-lg" routerLink="/address">Cancel</button>
 
       </form>
 

@@ -9,31 +9,42 @@
 <!--    </div>-->
 
     <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px">
-      <h4>New Address Add</h4>
+      <h2 class="justify-content-center m-3">New Address Add</h2>
       <form [formGroup] = "formdata" (ngSubmit) = "createAddress(formdata.value)" >
-        <div class="form-group">
-          <label for="InputCity">City</label>
-          <input type="text" class="form-control" id="InputCity"  placeholder="Enter city name" formControlName="city" required >
+        <div class="form-group form-group-sm col-sm-6 m-5 ">
+          <div class="row">
+            <label for="InputCity" class="col-sm-3 col-form-label">City</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="InputCity"  placeholder="Enter city name" formControlName="city" required >
+            </div>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label for="InputRaion">Raion</label>
-          <input type="text" class="form-control" id="InputRaion"  placeholder="Enter raion" formControlName="raion" required>
-
+        <div class="form-group form-group-sm col-sm-6 m-5 ">
+          <div class="row">
+            <label for="InputRaion" class="col-sm-3 col-form-label">Raion</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="InputRaion"  placeholder="Enter raion" formControlName="raion" required>
+            </div>
+          </div>
         </div>
-
-        <div class="form-group">
-          <label for="InputStreet">Street</label>
-          <input type="text" class="form-control" id="InputStreet"  placeholder="Enter street" formControlName="street" required>
-
+        <div class="form-group form-group-sm col-sm-6 m-5 ">
+          <div class="row">
+            <label for="InputStreet" class="col-sm-3 col-form-label">Street</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="InputStreet"  placeholder="Enter street" formControlName="street" required>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="InputHouse">House number</label>
-          <input type="text" class="form-control" id="InputHouse" placeholder="Enter house number" formControlName="houseNumber" maxlength="10" required>
+        <div class="form-group form-group-sm col-sm-6 m-5 ">
+          <div class="row">
+            <label for="InputHouse" class="col-sm-3 col-form-label">House number</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="InputHouse" placeholder="Enter house number" formControlName="houseNumber" maxlength="10" required>
+            </div>
+          </div>
         </div>
-
-        <button type="submit" class="btn btn-primary m-3" (click)="createAddress(formdata)">Submit</button>
-        <button type="cancel" class="btn btn-danger m-3" routerLink="/address">Cancel</button>
+        <button type="submit" class="btn btn-success btn-lg m-5" (click)="createAddress(formdata)">Submit</button>
+        <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/address">Cancel</button>
       </form>
     </div>
 

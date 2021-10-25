@@ -38,12 +38,11 @@ export class EditAddressComponent implements OnInit {
         });
   }
   updateAddress(playlistForm: { reset: () => void; }): void {
-    this.addressService.editAddress(this.address.addressId, this.address!)
+    this.addressService.editAddress(this.address.addressId, this.address)
       .subscribe(
         response => {
           // console.log(response);
           this.message = 'The person was updated successfully!';
-          // this.router.navigate(['/', 'address']);
         },
         error => {
           console.log(error);
@@ -55,7 +54,7 @@ export class EditAddressComponent implements OnInit {
   }
   updatePublished(status: any): void {
     const data = {
-      title: this.address.title!,
+      title: this.address.title,
       description: this.address.city,
       published: status
     };

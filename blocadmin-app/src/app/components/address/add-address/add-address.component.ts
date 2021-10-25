@@ -25,7 +25,7 @@ export class AddAddressComponent implements OnInit {
       city: new FormControl("",Validators.required),
       raion: new FormControl("",Validators.required),
       street: new FormControl("",Validators.required),
-      houseNumber: new FormControl("",Validators.required),
+      houseNumber: new FormControl("",[Validators.required,Validators.maxLength(10)]),
     });
   }
   createAddress(data:any){

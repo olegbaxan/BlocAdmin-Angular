@@ -12,6 +12,8 @@ import {HttpClientModule} from "@angular/common/http";
 import {ListAddressComponent } from './components/address/list-address/list-address.component';
 import {EditAddressComponent } from './components/address/edit-address/edit-address.component';
 import {NgbAccordionModule, NgbAlertModule, NgbModule, NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @NgModule({
@@ -22,18 +24,21 @@ import {NgbAccordionModule, NgbAlertModule, NgbModule, NgbPaginationModule} from
     LeftmenuComponent,
     AddAddressComponent,
     ListAddressComponent,
-    EditAddressComponent
+    EditAddressComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        ReactiveFormsModule,
-        FormsModule,
-        NgbPaginationModule,
-        NgbAlertModule,
-        NgbAccordionModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    NgbPaginationModule,
+    NgbAlertModule,
+    NgbAccordionModule,
+    BrowserAnimationsModule,
+    NgxPaginationModule,
+
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

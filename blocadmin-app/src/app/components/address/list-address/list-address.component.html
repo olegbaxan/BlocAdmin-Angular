@@ -4,8 +4,38 @@
 
   <div class="row">
     <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255);">
-      <div>
+      <div class="row">
+        <div class="col-2">
         <a class="btn btn-light btn-lg m-3" routerLink="add"><img src="../../../assets/img/new1.png">Add New</a>
+        </div>
+        <div class="col-3">
+          <form class="d-flex" action="list" method="get">
+              <div class="dataTables_length bs-select" id="dtBasicExample_length">
+
+                <div class="row">
+                  <div class="col-9">
+                  Items per Page:
+                  </div>
+                  <div class="col-2">
+                  <select (change)="handlePageSizeChange($event)">
+                    <option *ngFor="let size of pageSizes" [ngValue]="size">
+                      {{ size }}
+                    </option>
+                  </select>
+                  </div>
+                </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-5">
+          <form class="d-flex" action="list" method="get">
+<!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" #search>-->
+            <input  type="text"  class="form-control" placeholder="Search word" [(ngModel)]="title" name="query"/>
+            <button class="btn btn-success btn-lg text-center" type="button" (click)="retrieveAddresses()">Search</button>
+            <a href="/address" class="btn btn-primary btn-lg text-center" role="button" aria-pressed="true">Clear</a>
+          </form>
+        </div>
+
       </div>
 
       <div>
@@ -20,7 +50,14 @@
             </tr>
           </thead>
 
-          <tr *ngFor="let address of addresses" align="center" style="font-size: 14px">
+
+          <tr *ngFor="let address of addressesArray|paginate : {
+                  itemsPerPage: pageSize,
+                  currentPage: page,
+                  totalItems: count
+                };
+              let i = index"
+              align="center" style="font-size: 14px">
             <td>{{address.city}}</td>
             <td>{{address.raion}}</td>
             <td>{{address.street}}</td>
@@ -29,29 +66,17 @@
             <td align="center"><a class="btn btn-lg" routerLink="{{address.addressid}}"><img src="../../../assets/img/edit1.png">Edit</a></td>
 <!--            <td align="center"><a class="btn btn-default btn-sm" (click)="toggleEdit(address.addressid)"><img src="../../../assets/img/edit1.png">Edit</a></td>-->
           </tr>
-<!--          <tr>-->
-<!--            <td colspan="6">-->
-<!--              <app-add-address *ngIf="addNew"></app-add-address>-->
-<!--              <app-edit-address *ngIf="edit"></app-edit-address>-->
-<!--            </td>-->
-<!--          </tr>-->
         </table>
 
-<!--          <button type="button" class="btn btn-default m-4" (click)="toggleAddNew()">-->
-<!--          <button type="button" class="btn btn-default m-4" routerLink="add">-->
-<!--            <img src="../../../assets/img/new1.png">New-->
-<!--          </button>-->
-<!--        <button type="button" class="btn btn-default m-4" (click)="toggleAddNew()">-->
-<!--          <img src="../../../assets/img/enter.png"> Enter-->
-<!--        </button>-->
-<!--        <button type="button" class="btn btn-default m-4" (click)="toggleCancel()">-->
-<!--          <img src="../../../assets/img/cancel1.png"> Cancel-->
-<!--        </button>-->
         </div>
-
+      <div class="col-md-12">
+        <pagination-controls
+          previousLabel="Prev"
+          nextLabel="Next"
+          [responsive]="true"
+          (pageChange)="handlePageChange($event)"
+        ></pagination-controls>
+      </div>
     </div>
-
-<!--  <app-footer></app-footer>-->
-<!--  <a href="${pageContext.request.contextPath}/">Back to main page</a>-->
 </div>
 </div>
