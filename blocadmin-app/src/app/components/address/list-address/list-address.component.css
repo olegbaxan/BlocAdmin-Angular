@@ -5,3 +5,11 @@ th,td{
 /*  border-collapse: collapse;*/
 /*  height: 100vh;*/
 /*}*/
+
+.clearfix {
+  position: relative;
+  right: 35%;
+  left: 35%;
+  font-size: 16px;
+}
+

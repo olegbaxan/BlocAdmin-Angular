@@ -13,13 +13,13 @@ import {Address} from "../../../model/Address";
 @Injectable({providedIn:EditAddressComponent})
 export class ListAddressComponent implements OnInit {
 
-  addresses: any;
+  // addresses: any;
   // title="Delete address";
   address:any;
   message = '';
   query = '';
 
-  addressesArray: Address[] = [];
+  addresses: Address[] = [];
   currentAddress?: Address;
   currentIndex = -1;
   title = '';
@@ -48,7 +48,7 @@ export class ListAddressComponent implements OnInit {
     }
 
     if (page) {
-      params[`page`] = page;
+      params[`page`] = page-1;
     }
 
     if (pageSize) {
@@ -64,11 +64,12 @@ export class ListAddressComponent implements OnInit {
     this.addressService.getAll(params)
       .subscribe(
         response => {
-          const { addressesArray, totalItems } = response;
-          this.addressesArray = addressesArray;
+          const { addresses, totalItems } = response;
+          this.addresses = addresses;
           this.count = totalItems;
-          console.log(this.addressesArray);
-          console.log(this.count);
+          console.log(addresses);
+          console.log(totalItems);
+          // console.log(JSON.stringify(response));
           console.log(response);
         },
         error => {
@@ -87,19 +88,6 @@ export class ListAddressComponent implements OnInit {
     this.retrieveAddresses();
   }
 
-
-
-  // private retrieveAddresses(pageNo:number,pageSize:number): void {
-  //   // this.addressService.getAll()
-  //   this.addressService.pageAddress(pageNo,pageSize)
-  //     .subscribe((data) => {
-  //         this.addresses = data;
-  //         console.log(data);
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //       });
-  // }
   deleteAddress(id: number) {
     this.addressService.deleteAddress(id)
       .subscribe(() => {
@@ -111,15 +99,4 @@ export class ListAddressComponent implements OnInit {
           console.error(error);
         });
   }
-  retrieveSearchedAddresses(search: any) {
-    this.addressService.searchAddress(search)
-      .subscribe((data) => {
-          this.addresses = data;
-          console.log(data);
-        },
-        (error) => {
-          console.error(error);
-        });
-  }
-
 }

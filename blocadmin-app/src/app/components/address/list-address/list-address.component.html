@@ -3,7 +3,7 @@
 <!--    <app-root></app-root>-->
 
   <div class="row">
-    <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255);">
+    <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255);font-size: medium">
       <div class="row">
         <div class="col-2">
         <a class="btn btn-light btn-lg m-3" routerLink="add"><img src="../../../assets/img/new1.png">Add New</a>
@@ -27,7 +27,7 @@
             </div>
           </form>
         </div>
-        <div class="col-5">
+        <div class="col-5 pt-4">
           <form class="d-flex" action="list" method="get">
 <!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" #search>-->
             <input  type="text"  class="form-control" placeholder="Search word" [(ngModel)]="title" name="query"/>
@@ -37,7 +37,6 @@
         </div>
 
       </div>
-
       <div>
         <table class="table table-bordered table-hover table-primary table-responsive table-responsive-lg">
           <thead class="thead-dark">
@@ -51,12 +50,12 @@
           </thead>
 
 
-          <tr *ngFor="let address of addressesArray|paginate : {
+          <tr *ngFor="let address of addresses|paginate : {
                   itemsPerPage: pageSize,
                   currentPage: page,
                   totalItems: count
                 };
-              let i = index"
+                let i = index"
               align="center" style="font-size: 14px">
             <td>{{address.city}}</td>
             <td>{{address.raion}}</td>
@@ -64,19 +63,20 @@
             <td>{{address.houseNumber}}</td>
             <td align="center"><a class="btn btn-lg" (click)="deleteAddress(address.addressid)"><img src="../../../assets/img/delete1.png">Delete</a></td>
             <td align="center"><a class="btn btn-lg" routerLink="{{address.addressid}}"><img src="../../../assets/img/edit1.png">Edit</a></td>
-<!--            <td align="center"><a class="btn btn-default btn-sm" (click)="toggleEdit(address.addressid)"><img src="../../../assets/img/edit1.png">Edit</a></td>-->
           </tr>
         </table>
 
         </div>
-      <div class="col-md-12">
-        <pagination-controls
-          previousLabel="Prev"
-          nextLabel="Next"
-          [responsive]="true"
-          (pageChange)="handlePageChange($event)"
-        ></pagination-controls>
-      </div>
+
+    </div>
+    <div class="col-md-12 clearfix">
+      <pagination-controls
+        previousLabel="Prev"
+        nextLabel="Next"
+        [responsive]="true"
+        (pageChange)="handlePageChange($event)"
+        (pageBoundsCorrection)="handlePageChange($event)"
+      ></pagination-controls>
     </div>
 </div>
 </div>
