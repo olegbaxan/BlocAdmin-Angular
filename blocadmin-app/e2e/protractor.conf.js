@@ -26,8 +26,8 @@ exports.config = {
   },
   onPrepare() {
     require('ts-node').register({
-      project: require('path').join(__dirname, './tsconfig.json')
-    });
+        project: require('path').join(__dirname, './tsconfig.json')
+    }, undefined, undefined, undefined, name, surname, idnp, mobile);
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
         displayStacktrace: StacktraceOption.PRETTY

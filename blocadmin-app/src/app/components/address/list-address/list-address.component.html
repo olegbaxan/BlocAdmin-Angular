@@ -3,7 +3,7 @@
 <!--    <app-root></app-root>-->
 
   <div class="row">
-    <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255);font-size: medium">
+    <div class="col-12" style="border: 2px solid; border-color: rgb(0, 38, 255);font-size: large">
       <div class="row">
         <div class="col-2">
         <a class="btn btn-light btn-lg m-3" routerLink="add"><img src="../../../assets/img/new1.png">Add New</a>
@@ -56,7 +56,7 @@
                   totalItems: count
                 };
                 let i = index"
-              align="center" style="font-size: 14px">
+              align="center" style="font-size: 18px">
             <td>{{address.city}}</td>
             <td>{{address.raion}}</td>
             <td>{{address.street}}</td>
@@ -69,7 +69,11 @@
         </div>
 
     </div>
-    <div class="col-md-12 clearfix">
+
+  </div>
+  <div class="row">
+
+    <div class="col-md-12 paginationCss">
       <pagination-controls
         previousLabel="Prev"
         nextLabel="Next"
@@ -78,5 +82,5 @@
         (pageBoundsCorrection)="handlePageChange($event)"
       ></pagination-controls>
     </div>
-</div>
+  </div>
 </div>

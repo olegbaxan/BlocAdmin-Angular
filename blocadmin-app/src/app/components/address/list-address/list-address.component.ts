@@ -3,6 +3,8 @@ import {EditAddressComponent} from "../edit-address/edit-address.component";
 import {AddressService} from "../../../services/address.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Address} from "../../../model/Address";
+import {parameters} from "../../../constants/constants";
+import {LoginComponent} from "../../../components/auth/login/login.component";
 
 
 @Component({
@@ -18,25 +20,28 @@ export class ListAddressComponent implements OnInit {
   address:any;
   message = '';
   query = '';
+  isLoggedIn:any;
 
   addresses: Address[] = [];
-  currentAddress?: Address;
   currentIndex = -1;
   title = '';
 
-  page = 1;
-  count = 0;
-  pageSize = 3;
-  pageSizes = [3, 6, 9];
+  page = parameters.page;
+  count = parameters.count;
+  pageSize = parameters.pageSize;
+  pageSizes = parameters.pageSizes;
+
 
   constructor(
     private addressService: AddressService,
+    // private loginComponent: LoginComponent,
     private route: ActivatedRoute,
     private router: Router,) {};
 
   ngOnInit(): void {
     this.retrieveAddresses();
-    // this.getAddressById(this.route.snapshot.paramMap.get('id'));
+
+    // this.isLoggedIn=this.loginComponent.isLoggedIn;
   }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
@@ -69,7 +74,6 @@ export class ListAddressComponent implements OnInit {
           this.count = totalItems;
           console.log(addresses);
           console.log(totalItems);
-          // console.log(JSON.stringify(response));
           console.log(response);
         },
         error => {

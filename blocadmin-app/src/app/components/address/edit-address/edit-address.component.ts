@@ -42,7 +42,7 @@ export class EditAddressComponent implements OnInit {
       .subscribe(
         response => {
           // console.log(response);
-          this.message = 'The person was updated successfully!';
+          this.message = 'The address was updated successfully!';
         },
         error => {
           console.log(error);

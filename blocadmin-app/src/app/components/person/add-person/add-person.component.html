@@ -1,0 +1,103 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12" *ngIf="person"
+         style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+
+      <div class="submit-form">
+        <div *ngIf="!submitted">
+          <h2 class="justify-content-center m-3">Create a new Address</h2>
+          <div class="form-group form-group-sm col-sm-6 m-5 ">
+            <div class="row">
+              <label for="username" class="col-sm-3 col-form-label">Username</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="username" [(ngModel)]="person.username" name="username"
+                       required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="fname" class="col-sm-3 col-form-label">First Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="fname" placeholder="Enter First Name" [(ngModel)]="person.name"
+                       name="fname" required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="lname" class="col-sm-3 col-form-label">Last Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="lname" placeholder="Enter Last Name"
+                       [(ngModel)]="person.surname" name="lname" required="true">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="email" class="col-sm-3 col-form-label">Email</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="email" placeholder="Enter Email" [(ngModel)]="person.email" name="email" required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="role" class="col-sm-3 col-form-label">Role</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="role" placeholder="Select Role" [(ngModel)]="person.roles" name="role">
+                <select >
+                  <!--              <option *ngFor="let role of pageSizes" [ngValue]="size">-->
+                  <!--                {{ size }}-->
+                  <!--              </option>-->
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="description" class="col-sm-3 col-form-label">Description</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="description" placeholder="Enter Email" [(ngModel)]="person.description" name="description">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="phone" class="col-sm-3 col-form-label">Phone Number</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="phone" placeholder="Enter Email" [(ngModel)]="person.phone" name="phone">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="mobile" class="col-sm-3 col-form-label">Mobile Number</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="mobile" placeholder="Enter Email" [(ngModel)]="person.mobile" name="mobile">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-6 m-5">
+            <div class="row">
+              <label for="idnp" class="col-sm-3 col-form-label">IDNP</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="idnp" placeholder="Enter Email" [(ngModel)]="person.description" name="idnp" required="true">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success btn-lg m-5" (click)="savePerson()">Submit</button>
+          <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/person">Cancel</button>
+        </div>
+
+        <div *ngIf="submitted">
+          <h4>Address was submitted successfully!</h4>
+          <button class="btn btn-success btn-lg m-5 pt-5" (click)="newPerson()">Add new</button>
+          <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/person">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

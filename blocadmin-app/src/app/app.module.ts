@@ -14,7 +14,18 @@ import {EditAddressComponent } from './components/address/edit-address/edit-addr
 import {NgbAccordionModule, NgbAlertModule, NgbModule, NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {NgxPaginationModule} from 'ngx-pagination';
-
+import { authInterceptorProviders } from './components/auth/auth.interceptor';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { HomeComponent } from './components/auth/home/home.component';
+import { ProfileComponent } from './components/auth/profile/profile.component';
+import { BoardAdminComponent } from './components/auth/board-admin/board-admin.component';
+import { BoardBlocadminComponent } from './components/auth/board-blocadmin/board-blocadmin.component';
+import { BoardPersonComponent } from './components/auth/board-person/board-person.component';
+import { AddPersonComponent } from './components/person/add-person/add-person.component';
+import { EditPersonComponent } from './components/person/edit-person/edit-person.component';
+import { ListPersonComponent } from './components/person/list-person/list-person.component';
+import { NgSelectModule } from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
@@ -25,6 +36,16 @@ import {NgxPaginationModule} from 'ngx-pagination';
     AddAddressComponent,
     ListAddressComponent,
     EditAddressComponent,
+    LoginComponent,
+    RegisterComponent,
+    HomeComponent,
+    ProfileComponent,
+    BoardAdminComponent,
+    BoardBlocadminComponent,
+    BoardPersonComponent,
+    AddPersonComponent,
+    EditPersonComponent,
+    ListPersonComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,9 +58,9 @@ import {NgxPaginationModule} from 'ngx-pagination';
     NgbAccordionModule,
     BrowserAnimationsModule,
     NgxPaginationModule,
-
+    NgSelectModule,
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

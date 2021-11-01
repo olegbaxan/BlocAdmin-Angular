@@ -36,10 +36,6 @@ export class AddressService {
     return  this.http.get(`${this.baseUrl}/search/${search}`);
   }
 
-  pageAddress(pageNo:number, pageSize:number){
-    return this.http.get(`${this.baseUrl}/page/${pageNo}/of/${pageSize}`);
-  }
-
   getAll(params: any): Observable<any> {
     return this.http.get<any>(this.baseUrl, { params });
   }
