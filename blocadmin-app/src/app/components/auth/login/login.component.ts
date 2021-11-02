@@ -21,7 +21,9 @@ export class LoginComponent implements OnInit {
   roles: string[] = [];
   currentUser:string='';
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService,private router: Router) { }
+  constructor(private authService: AuthService,
+              private tokenStorage: TokenStorageService,
+              private router: Router) { }
 
 
   ngOnInit(): void {
@@ -42,19 +44,20 @@ export class LoginComponent implements OnInit {
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getPerson().roles;
         this.currentUser = username;
-        localStorage.setItem("role",this.roles.toString());
-        localStorage.setItem("person",this.tokenStorage.getPerson().username);
-        // this.reloadPage();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home'])
+          .then(() => {
+            window.location.reload();
+          });
       },
       err => {
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }
     );
+
   }
-  reloadPage(): void {
-    window.location.reload();
-  }
+  // reloadPage(): void {
+  //   window.location.reload();
+  // }
 
 }

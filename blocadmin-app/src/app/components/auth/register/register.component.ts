@@ -11,6 +11,7 @@ export class RegisterComponent implements OnInit {
     username: null,
     email: null,
     password: null,
+    password2: null,
     description:null,
     name:null,
     surname:null,
@@ -26,7 +27,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
   onSubmit(): void {
-    const { username, email, password,description,name,surname,idnp,mobile } = this.form;
+    const { username, email, password,password2,description,name,surname,idnp,mobile } = this.form;
 
     this.authService.register(username, email, password,description,name,surname,idnp,mobile).subscribe(
       data => {

@@ -13,7 +13,6 @@ export class EditPersonComponent implements OnInit {
   person:any;
   message = '';
   roles:any = [];
-  checkValue = false;
   selectedRoles:any=[];
   constructor(private personService: PersonService,
               private route: ActivatedRoute,

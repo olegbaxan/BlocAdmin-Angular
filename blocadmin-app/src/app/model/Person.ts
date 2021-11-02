@@ -1,4 +1,4 @@
-import {Role} from "./Role";
+
 export class Person {
 
   personid: any;

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from "./services/token-storage.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit{
   showModeratorBoard = false;
   username?: string;
 
-  constructor(private tokenStorageService: TokenStorageService) { }
+  constructor(private tokenStorageService: TokenStorageService,
+              private router: Router) { }
 
   ngOnInit(): void {
 
@@ -29,6 +31,9 @@ export class AppComponent implements OnInit{
       this.showModeratorBoard = this.roles.includes('ROLE_BLOCADMIN');
 
       this.username = person.username;
+    }
+    else{
+      this.router.navigate(['/login']);
     }
   }
   configureParameters() :void {
