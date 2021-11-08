@@ -53,7 +53,7 @@ getPerson() {
 }
   ngOnInit(): void {
     this.retrievePersons();
-    // this.getPerson();
+    this.getPerson();
   }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {

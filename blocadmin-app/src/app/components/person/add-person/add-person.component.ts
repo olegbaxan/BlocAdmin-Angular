@@ -21,15 +21,28 @@ export class AddPersonComponent implements OnInit {
     phone: '',
     mobile: '',
     idnp: '',
+
   };
   submitted = false;
+  roles:any = [];
+  selectedroles:any=[];
 
   constructor(private personService: PersonService) {
   }
 
   ngOnInit(): void {
+    this.getAllRoles();
   }
-
+  private getAllRoles():void {
+    this.personService.getRoles()
+      .subscribe(
+        response => {
+          this.roles = response;
+        },
+        error => {
+          console.log(error);
+        });
+  }
   savePerson(): void {
     const data = {
       username: this.person.username,
@@ -40,6 +53,7 @@ export class AddPersonComponent implements OnInit {
       phone: this.person.phone,
       mobile: this.person.mobile,
       idnp: this.person.idnp,
+      roles:this.selectedroles,
     };
 
     this.personService.createPerson(data)

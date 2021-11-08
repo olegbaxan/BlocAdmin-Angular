@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12" *ngIf="building"
+         style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+
+      <div class="submit-form">
+        <div *ngIf="!submitted">
+          <h2 class="justify-content-center m-3">Create a new Building</h2>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="address" class="col-sm-3 col-form-label">Address</label>
+              <div class="col-sm-9">
+                <ng-select class="custom" id="address"
+                           [searchable]="true"
+                           [multiple]="false"
+                           [(ngModel)]=selectedAddress>
+                  <ng-option *ngFor="let address of addresses" [value]="address">{{address.city}} {{address.raion}} {{address.street}} {{address.houseNumber}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+
+          </div>
+          <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/address/add">Add New Address</button>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="floor" class="col-sm-3 col-form-label">Floor Numbers</label>
+              <div class="col-sm-9">
+                <input type="number" min="0" class="form-control" id="floor" placeholder="Enter floors number" [(ngModel)]="building.floors"
+                       name="floors" required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="flat" class="col-sm-3 col-form-label">Flat Numbers</label>
+              <div class="col-sm-9">
+                <input type="number" min="0" class="form-control" id="flat" placeholder="Enter flats number"
+                       [(ngModel)]="building.flats" name="flats" required="true">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success btn-lg m-5" (click)="saveBuilding()">Submit</button>
+          <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/buildings">Cancel</button>
+        </div>
+
+        <div *ngIf="submitted">
+          <h4>Building was submitted successfully!</h4>
+          <button class="btn btn-success btn-lg m-5 pt-5" (click)="newBuilding()">Add new</button>
+          <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/buildings">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

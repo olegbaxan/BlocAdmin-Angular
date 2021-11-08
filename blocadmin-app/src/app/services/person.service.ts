@@ -31,8 +31,8 @@ export class PersonService {
     return this.http.get(`${this.baseUrl}/${id}`);
 
   }
-  createPerson(address: any): Observable<any>{
-    return  this.http.post(this.baseUrl,address);
+  createPerson(person: any): Observable<any>{
+    return  this.http.post(this.baseUrl,person);
   }
   editPerson(id:number, person:Object){
     return  this.http.put(this.baseUrl,person);

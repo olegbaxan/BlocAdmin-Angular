@@ -16,7 +16,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.currentPerson = this.token.getPerson();
     this.roles=this.currentPerson.roles;
-    console.log("ROleCurrProfile =",this.roles);
   }
 
 }

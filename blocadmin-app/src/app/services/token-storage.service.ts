@@ -35,7 +35,10 @@ export class TokenStorageService {
     if (person) {
       return JSON.parse(person);
     }
-
     return {};
+  }
+
+  getSupplier() {
+
   }
 }

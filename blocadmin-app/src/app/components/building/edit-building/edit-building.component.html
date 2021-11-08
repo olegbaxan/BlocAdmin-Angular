@@ -1,0 +1,65 @@
+<!--<div class="container" *ngIf="; else loggedOut">-->
+<div class="container" >
+  <div class="col-12" *ngIf="building"
+       style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+    <h2 class="justify-content-center m-3">Address attributes to Edit</h2>
+    <form (ngSubmit)="updateBuilding(playlistForm)" #playlistForm="ngForm">
+
+      <div class="form-group form-group-sm col-sm-6 m-5">
+        <div class="row">
+          <label for="address" class="col-sm-3 col-form-label">Address</label>
+          <div class="col-sm-9">
+            <ng-select class="custom" id="address" [items]="addresses"
+                       bindLabel="bindName"
+                       placeholder="Select Address"
+                       appendTo="body"
+                       [searchable]="true"
+                       [multiple]="false"
+                       [(ngModel)]=selectedAddress
+                       [ngModelOptions]="{standalone: true}">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group form-group-sm col-sm-6 m-5">
+        <div class="row">
+          <label for="floor" class="col-sm-3 col-form-label">Number of Floors</label>
+          <div class="col-sm-9">
+            <input type="number" min="0" class="form-control" id="floor" placeholder="Enter number of floors" [(ngModel)]="building.floors"
+                   name="floors">
+          </div>
+        </div>
+      </div>
+      <div class="form-group form-group-sm col-sm-6 m-5">
+        <div class="row">
+          <label for="flat" class="col-sm-3 col-form-label">Number of Flats</label>
+          <div class="col-sm-9">
+            <input type="number" min="0" class="form-control" id="flat" placeholder="Enter number of flats"
+                   [(ngModel)]="building.flats" name="flats">
+          </div>
+        </div>
+      </div>
+
+
+
+      <button type="submit" class="btn btn-success m-5 btn-lg" (click)="updateBuilding(playlistForm)">Submit</button>
+      <button type="cancel" class="btn btn-danger m-5  btn-lg" routerLink="/buildings">Cancel</button>
+
+    </form>
+  </div>
+</div>
+
+
+<!--</div>-->
+<div *ngIf="!building">
+  <br/>
+  <p>Cannot access this Building...</p>
+</div>
+
+<ng-template #loggedOut>
+  Please login.
+</ng-template>
+
+
+
+

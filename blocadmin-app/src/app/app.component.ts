@@ -33,6 +33,10 @@ export class AppComponent implements OnInit{
       this.username = person.username;
     }
     else{
+      this.tokenStorageService.signOut();
+      this.isLoggedIn = false;
+      this.showAdminBoard = false;
+      this.showModeratorBoard = false;
       this.router.navigate(['/login']);
     }
   }

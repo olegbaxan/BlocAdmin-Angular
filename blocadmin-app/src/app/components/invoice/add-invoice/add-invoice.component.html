@@ -1,0 +1,125 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12" *ngIf="invoice"
+         style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+
+      <div class="submit-form">
+        <div *ngIf="!submitted">
+          <h2 class="justify-content-center m-3">Add a new Invoice</h2>
+
+
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="number" class="col-sm-3 col-form-label">Invoice number</label>
+              <div class="col-sm-9">
+                <input type="text" min="0" class="form-control" id="number" placeholder="Enter invoice number serial"
+                       [(ngModel)]="invoice.invoiceNumber"
+                       name="invoiceNumber" required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="supplier" class="col-sm-3 col-form-label">Supplier</label>
+              <div class="col-sm-9">
+                <ng-select id="supplier"
+                           [searchable]="true"
+                           [multiple]="false"
+                           [(ngModel)]=invoice.supplier>
+                  <ng-option *ngFor="let supplier of suppliers" [value]="supplier">{{supplier.supplierName}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="meter" class="col-sm-3 col-form-label">Meter</label>
+              <div class="col-sm-9">
+                <ng-select id="meter"
+                           [searchable]="true"
+                           [multiple]="false"
+                           [(ngModel)]="invoice.meter">
+                  <ng-option *ngFor="let meter of meters" [value]="meter">{{meter.serial}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="current" class="col-sm-3 col-form-label">Current Value</label>
+              <div class="col-sm-9">
+                <input type="number" min="1" class="form-control" id="current" placeholder="Enter meter current value"
+                       [(ngModel)]="invoice.meterDataCurrent" name="meterDataCurrent">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="previous" class="col-sm-3 col-form-label">Previous Value</label>
+              <div class="col-sm-9">
+                <input type="number" min="1" class="form-control" id="previous" placeholder="Enter meter previous value"
+                       [(ngModel)]="invoice.meterDataPrevious" name="meterDataPrevious">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="sum" class="col-sm-3 col-form-label">Total Sum</label>
+              <div class="col-sm-9">
+                <input type="number" min="1" class="form-control" id="sum" placeholder="Enter invoice total sum"
+                       [(ngModel)]="invoice.invoiceSum" name="invoiceSum" required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="till" class="col-sm-3 col-form-label">Pay till</label>
+              <div class="col-sm-9">
+                <input type="date" min="1" class="form-control" id="till" placeholder="Last date for payment"
+                       [(ngModel)]="invoice.payTill" name="payTill" required="true">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="emitted" class="col-sm-3 col-form-label">Emitted day</label>
+              <div class="col-sm-9">
+                <input type="date" min="1" class="form-control" id="emitted" placeholder="Date for generation"
+                       [(ngModel)]="invoice.emittedDate" name="emittedDate">
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="place" class="col-sm-3 col-form-label">Placement</label>
+              <div class="col-sm-9">
+                <ng-select class="custom" id="place" [items]="typeOfMeterAndInvoices"
+                           bindLabel="name"
+                           placeholder="Select Type of Invoice"
+                           appendTo="body"
+                           [searchable]="false"
+                           [multiple]="false"
+                           [(ngModel)]="invoice.typeOfMeterAndInvoice"
+                           [ngModelOptions]="{standalone: true}">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+
+
+          <button type="submit" class="btn btn-success btn-lg m-5" (click)="saveInvoice()">Submit</button>
+          <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/invoices">Cancel</button>
+
+        </div>
+        <div *ngIf="submitted">
+          <h4>Building was submitted successfully!</h4>
+          <button class="btn btn-success btn-lg m-5 pt-5" (click)="newInvoice()">Add new</button>
+          <button type="cancel" class="btn btn-danger btn-lg m-5" routerLink="/invoices">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

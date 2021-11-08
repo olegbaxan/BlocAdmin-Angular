@@ -5,7 +5,7 @@
 
       <div class="submit-form">
         <div *ngIf="!submitted">
-          <h2 class="justify-content-center m-3">Create a new Address</h2>
+          <h2 class="justify-content-center m-3">Create a new Person</h2>
           <div class="form-group form-group-sm col-sm-6 m-5 ">
             <div class="row">
               <label for="username" class="col-sm-3 col-form-label">Username</label>
@@ -46,12 +46,15 @@
             <div class="row">
               <label for="role" class="col-sm-3 col-form-label">Role</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="role" placeholder="Select Role" [(ngModel)]="person.roles" name="role">
-                <select >
-                  <!--              <option *ngFor="let role of pageSizes" [ngValue]="size">-->
-                  <!--                {{ size }}-->
-                  <!--              </option>-->
-                </select>
+                <ng-select id="role" [items]="roles"
+                           bindLabel="name"
+                           placeholder="Select Roles"
+                           appendTo="body"
+                           [searchable]="true"
+                           [multiple]="true"
+                           [(ngModel)]=selectedroles>
+
+                </ng-select>
               </div>
             </div>
           </div>
@@ -59,7 +62,7 @@
             <div class="row">
               <label for="description" class="col-sm-3 col-form-label">Description</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="description" placeholder="Enter Email" [(ngModel)]="person.description" name="description">
+                <input type="text" class="form-control" id="description" placeholder="Enter Description" [(ngModel)]="person.description" name="description">
               </div>
             </div>
           </div>
@@ -67,7 +70,7 @@
             <div class="row">
               <label for="phone" class="col-sm-3 col-form-label">Phone Number</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="phone" placeholder="Enter Email" [(ngModel)]="person.phone" name="phone">
+                <input type="text" class="form-control" id="phone" placeholder="Enter Phone Number" [(ngModel)]="person.phone" name="phone">
               </div>
             </div>
           </div>
@@ -75,7 +78,7 @@
             <div class="row">
               <label for="mobile" class="col-sm-3 col-form-label">Mobile Number</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="mobile" placeholder="Enter Email" [(ngModel)]="person.mobile" name="mobile">
+                <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile Number" [(ngModel)]="person.mobile" name="mobile">
               </div>
             </div>
           </div>
@@ -83,7 +86,7 @@
             <div class="row">
               <label for="idnp" class="col-sm-3 col-form-label">IDNP</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="idnp" placeholder="Enter Email" [(ngModel)]="person.description" name="idnp" required="true">
+                <input type="text" class="form-control" id="idnp" placeholder="Enter IDNP" [(ngModel)]="person.idnp" name="idnp" required="true">
               </div>
             </div>
           </div>

@@ -29,7 +29,6 @@ export class EditPersonComponent implements OnInit {
       .subscribe(
         response => {
           this.roles = response;
-          console.log("roles",this.roles);
         },
         error => {
           console.log(error);
@@ -42,23 +41,15 @@ export class EditPersonComponent implements OnInit {
         data => {
           this.person = data;
           this.selectedRoles=data.roles;
-          console.log("User",data);
-          console.log("person.rolesbyID ",data.roles);
-          console.log("selectedRoleByID ",this.selectedRoles);
         },
         error => {
           console.log(error);
         });
   }
   updatePerson(playlistForm: { reset: () => void; }): void {
-    console.log("Roles update= ",this.person.roles);
-    console.log("selectedROle ",this.selectedRoles);
-    console.log("person ",this.person);
     this.personService.editPerson(this.person.personid, this.person)
       .subscribe(
         response => {
-          // console.log(response);
-          this.message = 'The person was updated successfully!';
         },
         error => {
           console.log(error);
