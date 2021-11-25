@@ -3,9 +3,10 @@ import {Address} from "./Address";
 
 export class Building {
 
-  buildingid: undefined;
-  floors?: any;
-  flats?: any;
+  buildingid?: Number;
+  floors?: Number;
+  flats?: Number;
+  entranceNo?: Number;
   address?: Address;
 
 }

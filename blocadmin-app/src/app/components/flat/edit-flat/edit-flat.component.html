@@ -1,5 +1,5 @@
-<!--<div class="container" *ngIf="; else loggedOut">-->
-<div class="container" >
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
+<!--<div class="container" >-->
   <div class="col-12" *ngIf="flat"
        style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
     <h2 class="justify-content-center m-3">Flat attributes to Edit</h2>
@@ -25,10 +25,10 @@
       </div>
       <div class="form-group form-group-sm col-sm-8 m-5">
         <div class="row">
-          <label for="ladder" class="col-sm-3 col-form-label">Ladder</label>
+          <label for="entrance" class="col-sm-3 col-form-label">Entrance</label>
           <div class="col-sm-9">
-            <input type="number" min="1" class="form-control" id="ladder" placeholder="Enter ladder number"
-                   [(ngModel)]="flat.ladder" name="ladder" >
+            <input type="number" min="1" class="form-control" id="entrance" placeholder="Enter ladder number"
+                   [(ngModel)]="flat.entrance" name="entrance" >
           </div>
         </div>
       </div>
@@ -62,6 +62,7 @@
                        [multiple]="true"
                        [(ngModel)]=selectedPerson
                        [ngModelOptions]="{standalone: true}">
+<!--              <ng-option *ngFor="let person of persons" [value]="person">{{person.name}} {{person.surname}}</ng-option>-->
             </ng-select>
           </div>
         </div>
@@ -78,22 +79,9 @@
                        [multiple]="false"
                        [(ngModel)]=selectedBuilding
                        [ngModelOptions]="{standalone: true}">
-            </ng-select>
-          </div>
-        </div>
-      </div>
-      <div class="form-group form-group-sm col-sm-6 m-5">
-        <div class="row">
-          <label for="meter" class="col-sm-3 col-form-label">Meters</label>
-          <div class="col-sm-9">
-            <ng-select id="meter" [items]="meters"
-                       bindLabel="bindName"
-                       placeholder="Select Building"
-                       appendTo="body"
-                       [searchable]="true"
-                       [multiple]="true"
-                       [(ngModel)]=selectedMeters
-                       [ngModelOptions]="{standalone: true}">
+<!--              <ng-option *ngFor="let building of buildings"-->
+<!--                         [value]="building">{{building?.address?.city}} {{building?.address?.raion}} {{building?.address?.street}} {{building?.address?.houseNumber}}-->
+<!--                <span *ngIf="building?.address?.entranceNo">/{{building?.address?.entranceNo}}</span></ng-option>-->
             </ng-select>
           </div>
         </div>

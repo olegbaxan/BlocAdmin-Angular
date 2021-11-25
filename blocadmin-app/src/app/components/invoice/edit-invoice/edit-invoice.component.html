@@ -1,8 +1,8 @@
-<!--<div class="container" *ngIf="; else loggedOut">-->
-<div class="container" >
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
+<!--<div class="container" >-->
   <div class="col-12" *ngIf="invoice"
        style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
-    <h2 class="justify-content-center m-3">Meter attributes to Edit</h2>
+    <h2 class="justify-content-center m-3">Invoice attributes to Edit</h2>
     <form (ngSubmit)="updateInvoice(playlistForm)" #playlistForm="ngForm">
 
       <div class="form-group form-group-sm col-sm-6 m-5">
@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div class="form-group form-group-sm col-sm-6 m-5">
+      <div class="form-group form-group-sm col-sm-6 m-5" >
         <div class="row">
           <label for="supplier" class="col-sm-3 col-form-label">Supplier</label>
           <div class="col-sm-9">
@@ -25,28 +25,51 @@
                        [searchable]="true"
                        [multiple]="false"
                        [(ngModel)]=selectedSupplier
-                       [ngModelOptions]="{standalone: true}">
+                       [ngModelOptions]="{standalone: true}" [readonly]="true">
+              <ng-option *ngFor="let building of buildings"
+                         [value]="building">{{building?.address?.city}} {{building?.address?.raion}} {{building?.address?.street}} {{building?.address?.houseNumber}}
+                <span *ngIf="building?.address?.entranceNo">/{{building?.address?.entranceNo}}</span></ng-option>
             </ng-select>
           </div>
         </div>
       </div>
-      <div class="form-group form-group-sm col-sm-6 m-5">
+      <div class="form-group form-group-sm col-sm-6 m-5" *ngIf="selectedMeter">
         <div class="row">
           <label for="meter" class="col-sm-3 col-form-label">Meter</label>
           <div class="col-sm-9">
-            <ng-select id="meter" [items]="meters"
+            <ng-select id="meter"
+                       [items]="meters"
                        bindLabel="bindName"
                        placeholder="Select Meter"
                        appendTo="body"
                        [searchable]="true"
                        [multiple]="false"
                        [(ngModel)]=selectedMeter
-                       [ngModelOptions]="{standalone: true}">
+                       [ngModelOptions]="{standalone: true}" [readonly]="true">
+<!--              <ng-option *ngFor="let meter of meters" [value]="meter">{{meter?.serial}}</ng-option>-->
             </ng-select>
           </div>
         </div>
       </div>
       <div class="form-group form-group-sm col-sm-8 m-5">
+        <div class="row">
+          <label for="building" class="col-sm-3 col-form-label">Buildings</label>
+          <div class="col-sm-9">
+            <ng-select id="building"
+                       [items]="buildings"
+                       bindLabel="bindName"
+                       [searchable]="true"
+                       [multiple]="true"
+                       [(ngModel)]="selectedBuildings"
+                       [ngModelOptions]="{standalone: true}">
+<!--              <ng-option *ngFor="let building of buildings"-->
+<!--                         [value]="building">{{building?.address?.city}} {{building?.address?.raion}} {{building?.address?.street}} {{building?.address?.houseNumber}}-->
+<!--                <span *ngIf="building?.address?.entranceNo">/{{building?.address?.entranceNo}}</span></ng-option>-->
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group form-group-sm col-sm-8 m-5" *ngIf="selectedMeter">
         <div class="row">
           <label for="current" class="col-sm-3 col-form-label">Current Value</label>
           <div class="col-sm-9">
@@ -55,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div class="form-group form-group-sm col-sm-8 m-5">
+      <div class="form-group form-group-sm col-sm-8 m-5" *ngIf="selectedMeter">
         <div class="row">
           <label for="previous" class="col-sm-3 col-form-label">Previous Value</label>
           <div class="col-sm-9">
@@ -95,8 +118,15 @@
         <div class="row">
           <label for="place" class="col-sm-3 col-form-label">Placement</label>
           <div class="col-sm-9">
-            <input type="double" min="1" class="form-control" id="place"
-                   [(ngModel)]="invoice.typeOfMeterAndInvoice.name" name="typeOfMeterAndInvoice">
+            <ng-select id="place"
+                       [items]="typeOfMeterInvoice"
+                       bindLabel="name"
+                       [searchable]="false"
+                       [multiple]="false"
+                       [(ngModel)]="selectedTypeOfMeterInvoice"
+                       [ngModelOptions]="{standalone: true}"[readonly]="true">
+<!--              <ng-option *ngFor="let type of typeOfMeterInvoice" [value]="type">{{type.name}}</ng-option>-->
+            </ng-select>
           </div>
         </div>
       </div>

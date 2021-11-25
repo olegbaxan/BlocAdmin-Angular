@@ -1,5 +1,5 @@
-<!--<div class="container" *ngIf="; else loggedOut">-->
-<div class="container" >
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
+<!--<div class="container" >-->
   <div class="col-12" *ngIf="supplier"
        style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
     <h2 class="justify-content-center m-3">Address attributes to Edit</h2>
@@ -59,6 +59,8 @@
                        [multiple]="false"
                        [(ngModel)]=selectedAddress
                        [ngModelOptions]="{standalone: true}">
+              <ng-option *ngFor="let address of addresses" [value]="address">{{address.city}} {{address.raion}} {{address.street}} {{address.houseNumber}}<span *ngIf="supplier?.address?.entranceNo">/{{supplier?.address?.entranceNo}}</span></ng-option>
+
             </ng-select>
           </div>
         </div>

@@ -1,6 +1,6 @@
 export class Status {
 
-  id?: undefined;
+  id?: Number;
   name?: String;
 
 }

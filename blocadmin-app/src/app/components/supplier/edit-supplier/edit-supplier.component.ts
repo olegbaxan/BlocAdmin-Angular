@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {PersonService} from "../../../services/person.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SupplierService} from "../../../services/supplier.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-edit-supplier',
@@ -16,7 +17,11 @@ export class EditSupplierComponent implements OnInit {
   selectedAddress:any=[];
   constructor(private supplierService: SupplierService,
               private route: ActivatedRoute,
-              private router: Router,) { }
+              private router: Router,
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.message = '';
@@ -28,11 +33,16 @@ export class EditSupplierComponent implements OnInit {
     this.supplierService.getAddresses()
       .subscribe(
         response => {
+          this.addresses=[];
           for (let item in response) {
-            response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber;
+            if(!response[item].entranceNo){
+              response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber
+            }
+            else {
+              response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber+"/"+response[item].entranceNo;
+            }
             this.addresses.push(response[item]);
           }
-
         },
         error => {
           console.log(error);
@@ -42,8 +52,14 @@ export class EditSupplierComponent implements OnInit {
     this.supplierService.getById(id)
       .subscribe(
         data => {
+          if(!data.address.entranceNo){
+            data.address.bindName = data.address.city + " " + data.address.raion+ " " + data.address.street+ " " + data.address.houseNumber;
+          }
+          else {
+            data.address.bindName = data.address.city + " " + data.address.raion+ " " + data.address.street+ " " + data.address.houseNumber+"/"+data.address.entranceNo;
+          }
           this.supplier = data;
-          this.selectedAddress=data.address.city+" "+data.address.raion+" "+data.address.street+" "+data.address.houseNumber;
+          this.selectedAddress=data.address;
 
         },
         error => {

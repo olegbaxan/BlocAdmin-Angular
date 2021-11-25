@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="isLoggedIn; else loggedOut">
+<div class="container-fluid" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <!--<div class="container-fluid">-->
   <div class="row">
     <h2 class="pt-3">List of available Flats</h2>
@@ -36,18 +36,27 @@
         </div>
 
       </div>
+      <div class="col-md-12 paginationCss">
+        <pagination-controls
+          previousLabel="Prev"
+          nextLabel="Next"
+          [responsive]="true"
+          (pageChange)="handlePageChange($event)"
+          (pageBoundsCorrection)="handlePageChange($event)"
+        ></pagination-controls>
+      </div>
       <div>
         <table class="table table-bordered table-hover table-primary table-responsive table-responsive-lg">
           <thead class="thead-dark">
           <tr align="center" style="font-size: 20px">
             <th class="col-1">Flat number</th>
             <th class="col-1">Floor</th>
-            <th class="col-1">Ladder</th>
+            <th class="col-1">Entrance</th>
             <th class="col-1">Wallet</th>
-            <th class="col-2">Person</th>
+            <th class="col-2">Person(s)</th>
             <th class="col-2">Building</th>
-            <th class="col-1">Meters</th>
-            <th class="col-1">Tenants</th>
+<!--            <th class="col-1">Meters</th>-->
+            <th class="col-2">Person Number</th>
             <th class="col-2" colspan=2>Quick Edit</th>
           </tr>
           </thead>
@@ -62,15 +71,16 @@
               align="center" style="font-size: 18px">
             <td>{{flat.flatNumber}}</td>
             <td>{{flat.floor}}</td>
-            <td>{{flat.ladder}}</td>
+            <td>{{flat.entrance}}</td>
             <td>{{flat.wallet}}</td>
             <td *ngIf="flat.person">
-              <ng-option *ngFor="let p of flat.person" [value]="flat.person">{{p.name}}</ng-option>
+              <ng-option *ngFor="let p of flat.person" [value]="flat.person">{{p.name}} {{p.surname}}</ng-option>
             </td>
-            <td *ngIf="flat.building">{{flat.building.buildingid}} {{flat.building?.address?.city}} {{flat.building?.address?.raion}}</td>
-            <td *ngIf="flat.meters">
-              <ng-option *ngFor="let f of flat.meters" [value]="flat.meters">{{f.serial}}</ng-option>
-            </td>
+<!--            Without entrance-->
+            <td *ngIf="!flat.building?.address?.entranceNo">{{flat.building?.address?.city}} {{flat.building?.address?.raion}} {{flat.building?.address?.street}} {{flat.building?.address?.houseNumber}}</td>
+<!--            In case if entranceExist-->
+            <td *ngIf="flat.building?.address?.entranceNo">{{flat.building?.address?.city}} {{flat.building?.address?.raion}} {{flat.building?.address?.street}} {{flat.building?.address?.houseNumber}}
+              /{{flat.building?.address?.entranceNo}} </td>
             <td>{{flat.numberOfPerson}}</td>
             <td align="center"><a class="btn btn-lg" routerLink="{{flat.flatid}}"><img
               src="../../../assets/img/edit1.png">Edit</a></td>

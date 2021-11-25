@@ -1,8 +1,9 @@
 export class Address {
 
-    addressid: any;
-    city?: string;
-    raion?: string;
+    addressid?: Number;
+    city?: String;
+    raion?: String;
     street?:string;
-    houseNumber?:string;
+    houseNumber?:String;
+    entranceNo?:Number;
 }

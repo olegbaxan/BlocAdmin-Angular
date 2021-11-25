@@ -40,9 +40,9 @@
         <table class="table table-bordered table-hover table-primary table-responsive table-responsive-lg">
           <thead class="thead-dark">
           <tr align="center" style="font-size: 20px">
-            <th class="col-1">Supplier</th>
-            <th class="col-1">IBAN</th>
-            <th class="col-1">Bank Code</th>
+            <th class="col-2">Supplier</th>
+            <th class="col-2">IBAN</th>
+            <th class="col-2">Bank Code</th>
             <th class="col-2">Fiscal Code</th>
             <th class="col-3">Address</th>
             <th class="col-2">Information</th>
@@ -62,7 +62,7 @@
             <td>{{supplier.IBAN}}</td>
             <td>{{supplier.bankCode}}</td>
             <td>{{supplier.fiscalCode}}</td>
-            <td *ngIf="supplier.address">{{supplier.address.city}} {{supplier.address.raion}} {{supplier.address.street}} {{supplier.address.houseNumber}}</td>
+            <td *ngIf="supplier.address">{{supplier.address.city}} {{supplier.address.raion}} {{supplier.address.street}} {{supplier.address.houseNumber}}<span *ngIf="supplier?.address?.entranceNo">/{{supplier?.address?.entranceNo}}</span></td>
             <td>{{supplier.details}}</td>
             <td align="center"><a class="btn btn-lg" routerLink="{{supplier.supplierid}}"><img src="../../../assets/img/edit1.png">Edit</a></td>
           </tr>

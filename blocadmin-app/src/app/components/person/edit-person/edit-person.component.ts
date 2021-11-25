@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import {PersonService} from "../../../services/person.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-edit-person',
@@ -16,7 +18,12 @@ export class EditPersonComponent implements OnInit {
   selectedRoles:any=[];
   constructor(private personService: PersonService,
               private route: ActivatedRoute,
-              private router: Router,) { }
+              private router: Router,
+              private _location: Location,
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.message = '';
@@ -28,6 +35,7 @@ export class EditPersonComponent implements OnInit {
     this.personService.getRoles()
       .subscribe(
         response => {
+          this.roles=[];
           this.roles = response;
         },
         error => {
@@ -56,7 +64,10 @@ export class EditPersonComponent implements OnInit {
         });
     setTimeout(()=>{
       playlistForm.reset();
-      this.router.navigate(['/person']);
+      if(this.tokenStorageService.isAdmin || this.tokenStorageService.isManager){
+        this.router.navigate(['/person']);
+      }else  this.router.navigate(['/home']);
+
     }, 1000);
   }
   updatePublished(status: any): void {
@@ -75,5 +86,8 @@ export class EditPersonComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+  backClicked() {
+    this._location.back();
   }
 }

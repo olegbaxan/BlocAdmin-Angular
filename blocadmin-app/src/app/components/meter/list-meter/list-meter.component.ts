@@ -23,9 +23,7 @@ export class ListMeterComponent implements OnInit {
   meters: Meter[] = [];
   currentIndex = -1;
   title = '';
-  loggedUserID: string = '';
-  loggedUserName: string = '';
-  isLoggedIn: boolean = false;
+
   page = parameters.page;
   count = parameters.count;
   pageSize = parameters.pageSize;
@@ -34,11 +32,13 @@ export class ListMeterComponent implements OnInit {
               private authService:AuthService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,) { }
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.retrieveMeters();
-    this.getPerson();
   }
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
     // tslint:disable-next-line:prefer-const
@@ -65,20 +65,12 @@ export class ListMeterComponent implements OnInit {
     this.meterService.getAll(params)
       .subscribe(
         response => {
-          console.log("Responce",response);
           const {meters, totalItems} = response;
           this.meters = meters;
-          console.log("Meters ",this.meters);
-          this.count = totalItems;
+           this.count = totalItems;
         },
         error => {
           console.log(error);
-          // if(error.error.error=="Unauthorized"){
-          //   this.isLoggedIn = false;
-          //   window.sessionStorage.removeItem("auth-person");
-          //   window.sessionStorage.removeItem("auth-token");
-          //   this.router.navigate(['/login']);
-          // }
           this.authService.logout(error.error.error);
         });
   }
@@ -92,15 +84,4 @@ export class ListMeterComponent implements OnInit {
     this.page = 1;
     this.retrieveMeters();
   }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
-  }
-
 }

@@ -34,7 +34,7 @@ export class PersonService {
   createPerson(person: any): Observable<any>{
     return  this.http.post(this.baseUrl,person);
   }
-  editPerson(id:number, person:Object){
+  editPerson(id:Number|undefined, person:Object|undefined){
     return  this.http.put(this.baseUrl,person);
   }
 
@@ -44,5 +44,13 @@ export class PersonService {
 
   getRoles(): Observable<any> {
     return this.http.get(`${this.baseUrl}/roles`);
+  }
+  checkUsername(username: String|undefined ): Observable<any> {
+    return this.http.get(`${this.baseUrl}/username/${username}`);
+
+  }
+  checkIdnp(idnp: String|undefined ): Observable<any> {
+    return this.http.get(`${this.baseUrl}/idnp/${idnp}`);
+
   }
 }

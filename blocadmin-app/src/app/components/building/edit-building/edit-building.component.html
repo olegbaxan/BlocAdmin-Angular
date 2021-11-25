@@ -1,24 +1,22 @@
-<!--<div class="container" *ngIf="; else loggedOut">-->
-<div class="container" >
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <div class="col-12" *ngIf="building"
        style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
-    <h2 class="justify-content-center m-3">Address attributes to Edit</h2>
+    <h2 class="justify-content-center m-3">Building attributes to Edit</h2>
     <form (ngSubmit)="updateBuilding(playlistForm)" #playlistForm="ngForm">
 
-      <div class="form-group form-group-sm col-sm-6 m-5">
-        <div class="row">
-          <label for="address" class="col-sm-3 col-form-label">Address</label>
-          <div class="col-sm-9">
-            <ng-select class="custom" id="address" [items]="addresses"
-                       bindLabel="bindName"
-                       placeholder="Select Address"
-                       appendTo="body"
-                       [searchable]="true"
-                       [multiple]="false"
-                       [(ngModel)]=selectedAddress
-                       [ngModelOptions]="{standalone: true}">
-            </ng-select>
-          </div>
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="address">Select</label>
+        <div class="col-md-9">
+          <ng-select class="custom" id="address" [items]="addresses"
+                     bindLabel="bindName"
+                     placeholder=""
+                     appendTo="body"
+                     [searchable]="true"
+                     [multiple]="false"
+                     [(ngModel)]=selectedAddress
+                     [ngModelOptions]="{standalone: true}">
+            <ng-option *ngFor="let address of addresses" [value]="address">{{address.city}} {{address.raion}} {{address.street}} {{address.houseNumber}}</ng-option>
+          </ng-select>
         </div>
       </div>
       <div class="form-group form-group-sm col-sm-6 m-5">
@@ -28,6 +26,13 @@
             <input type="number" min="0" class="form-control" id="floor" placeholder="Enter number of floors" [(ngModel)]="building.floors"
                    name="floors">
           </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="text-input">Text Input</label>
+        <div class="col-md-9">
+          <input type="text" id="text-input" name="text-input" class="form-control" placeholder="Text">
+          <span class="help-block">This is a help text</span>
         </div>
       </div>
       <div class="form-group form-group-sm col-sm-6 m-5">
@@ -48,6 +53,7 @@
     </form>
   </div>
 </div>
+
 
 
 <!--</div>-->

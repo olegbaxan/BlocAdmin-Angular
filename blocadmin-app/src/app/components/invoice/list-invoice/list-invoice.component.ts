@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Flat} from "../../../model/Flat";
 import {parameters} from "../../../constants/constants";
 import {FlatService} from "../../../services/flat.service";
@@ -6,6 +6,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {Invoice} from "../../../model/Invoice";
 import {InvoiceService} from "../../../services/invoice.service";
+import {Observable} from "rxjs";
+import {FileUploadService} from "../../../services/file-upload.service";
+import * as FileSaver from "file-saver";
 
 @Component({
   selector: 'app-list-invoice',
@@ -18,25 +21,28 @@ export class ListInvoiceComponent implements OnInit {
   message = '';
   query = '';
 
-  invoices: Invoice[]=[];
+  invoices: Invoice[] = [];
   currentIndex = -1;
   title = '';
-  loggedUserID: string = '';
-  loggedUserName: string = '';
-  isLoggedIn: boolean = false;
   page = parameters.page;
   count = parameters.count;
   pageSize = parameters.pageSize;
   pageSizes = parameters.pageSizes;
+
   constructor(private invoiceService: InvoiceService,
+              private fileUploadService: FileUploadService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,) { }
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+    this.invoices = [];
+  }
 
   ngOnInit(): void {
     this.retrieveInvoices();
-    this.getPerson();
   }
+
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
     // tslint:disable-next-line:prefer-const
     let params: any = {};
@@ -64,13 +70,38 @@ export class ListInvoiceComponent implements OnInit {
         response => {
           const {invoices, totalItems} = response;
           this.invoices = invoices;
-          console.log("Invoice",this.invoices);
+          console.log("Invoices full", this.invoices);
           this.count = totalItems;
+          this.getInvoiceFileInfo();
         },
         error => {
           console.log(error);
         });
   }
+
+  getInvoiceFileInfo(): void {
+    for (let item in this.invoices) {
+      console.log("For Invoice", this.invoices[item])
+      if (this.invoices[item].invoiceFileId != "" || this.invoices[item].invoiceFileId != null) {
+        console.log("FileID=",this.invoices[item].invoiceFileId)
+        this.invoiceService.getFilesById(this.invoices[item].invoiceFileId)
+          .subscribe(
+            response => {
+              const {invoiceFile, fileInfo} = response;
+              this.invoices[item].invoiceFile = invoiceFile;
+              this.invoices[item].fileInfo = fileInfo[0];
+            },
+            error => {
+              console.log(error);
+            });
+      }
+      // this.invoices.push(invoices[item]);
+    }
+
+    console.log("For Invoice full", this.invoices);
+
+  }
+
   handlePageChange(event: number): void {
     this.page = event;
     this.retrieveInvoices();
@@ -80,16 +111,6 @@ export class ListInvoiceComponent implements OnInit {
     this.pageSize = event.target.value;
     this.page = 1;
     this.retrieveInvoices();
-  }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
   }
 
 }

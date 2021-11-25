@@ -5,6 +5,7 @@ import {Address} from "../../../model/Address";
 import {any} from "codelyzer/util/function";
 import {SupplierService} from "../../../services/supplier.service";
 import {AddressService} from "../../../services/address.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-add-supplier',
@@ -27,7 +28,11 @@ export class AddSupplierComponent implements OnInit {
   selectedAddress:any=[];
 
   constructor(private supplierService: SupplierService,
-              private addressService: AddressService) { }
+              private addressService: AddressService,
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.getAllAddresses();
@@ -37,6 +42,7 @@ export class AddSupplierComponent implements OnInit {
     this.supplierService.getAddresses()
       .subscribe(
         response => {
+          this.addresses=[];
           this.addresses = response;
           console.log("address",this.addresses);
           console.log("responce",response);

@@ -13,6 +13,7 @@ import {BuildingService} from "../../../services/building.service";
   styleUrls: ['./list-building.component.css']
 })
 export class ListBuildingComponent implements OnInit {
+
   building: any;
   message = '';
   query = '';
@@ -20,21 +21,21 @@ export class ListBuildingComponent implements OnInit {
   buildings: Building[] = [];
   currentIndex = -1;
   title = '';
-  loggedUserID: string = '';
-  loggedUserName: string = '';
-  isLoggedIn: boolean = false;
   page = parameters.page;
   count = parameters.count;
   pageSize = parameters.pageSize;
   pageSizes = parameters.pageSizes;
+
   constructor(private buildingService: BuildingService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,) { }
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.retrieveBuildings();
-    this.getPerson();
   }
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
     // tslint:disable-next-line:prefer-const
@@ -63,7 +64,7 @@ export class ListBuildingComponent implements OnInit {
         response => {
           const {buildings, totalItems} = response;
           this.buildings = buildings;
-
+          console.log("Build",this.buildings);
           this.count = totalItems;
         },
         error => {
@@ -79,16 +80,6 @@ export class ListBuildingComponent implements OnInit {
     this.pageSize = event.target.value;
     this.page = 1;
     this.retrieveBuildings();
-  }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
   }
 
 }

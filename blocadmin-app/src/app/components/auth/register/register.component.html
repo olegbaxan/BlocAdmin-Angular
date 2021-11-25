@@ -111,7 +111,7 @@
                   name="surname"
                   [(ngModel)]="form.surname"
                   required
-                  minlength="13"
+                  minlength="3"
                   #surname="ngModel"
                 />
               </div>
@@ -133,6 +133,7 @@
                   [(ngModel)]="form.idnp"
                   required
                   minlength="13"
+                  maxlength="13"
                   #idnp="ngModel"
                 />
               </div>

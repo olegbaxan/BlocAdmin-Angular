@@ -28,16 +28,26 @@ import {AddMeterdataComponent} from "./components/meterdata/add-meterdata/add-me
 import {ListSupplierComponent} from "./components/supplier/list-supplier/list-supplier.component";
 import {EditSupplierComponent} from "./components/supplier/edit-supplier/edit-supplier.component";
 import {AddSupplierComponent} from "./components/supplier/add-supplier/add-supplier.component";
+import {BulkMeterdataComponent} from "./components/meterdata/bulk-meterdata/bulk-meterdata.component";
+import {AddPaymentComponent} from "./components/payment/add-payment/add-payment.component";
+import {EditPaymentComponent} from "./components/payment/edit-payment/edit-payment.component";
+import {ListPaymentComponent} from "./components/payment/list-payment/list-payment.component";
+import {BulkaddMeterdataComponent} from "./components/meterdata/bulkadd-meterdata/bulkadd-meterdata.component";
+import {ForgotPasswordComponent} from "./components/auth/forgot-password/forgot-password.component";
+import {PasswordResetComponent} from "./components/auth/password-reset/password-reset.component";
 
 const routes: Routes = [
+  { path: 'password/forgot/reset', component: PasswordResetComponent },
+  { path: 'forgotpassword', component: ForgotPasswordComponent },
   { path: 'home', component: HomeComponent },
   {path: 'address/add', component: AddAddressComponent },
   {path: 'address/:id', component: EditAddressComponent},
   {path: 'address', component: ListAddressComponent },
-  { path: 'login', component: LoginComponent },
+
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: 'person/add', component: AddPersonComponent },
+  // { path: 'person/add', component: AddPersonComponent },
+  { path: 'person/add', component: RegisterComponent },
   { path: 'person/:id', component: EditPersonComponent },
   { path: 'person', component: ListPersonComponent },
   { path: 'buildings/add', component: AddBuildingComponent },
@@ -53,12 +63,20 @@ const routes: Routes = [
   { path: 'meters/:id', component: EditMeterComponent },
   { path: 'meters', component: ListMeterComponent },
   { path: 'meterdata/add', component: AddMeterdataComponent },
+  { path: 'meterdata/bulk', component: BulkMeterdataComponent },
+  { path: 'meterdata/bulkadd', component: BulkaddMeterdataComponent },
   { path: 'meterdata/:id', component: EditMeterdataComponent },
+
   { path: 'meterdata', component: ListMeterdataComponent },
   { path: 'suppliers/add', component: AddSupplierComponent },
   { path: 'suppliers/:id', component: EditSupplierComponent },
   { path: 'suppliers', component: ListSupplierComponent },
+  { path: 'payments/add', component: AddPaymentComponent },
+  { path: 'payments/:id', component: EditPaymentComponent },
+  { path: 'payments', component: ListPaymentComponent },
 
+
+  { path: 'login', component: LoginComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 

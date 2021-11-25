@@ -1,5 +1,5 @@
-<!--<div class="container-fluid" *ngIf="isLoggedIn; else loggedOut">-->
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
+<!--<div class="container-fluid">-->
   <!--    <app-header></app-header>-->
   <!--    <app-root></app-root>-->
 
@@ -38,6 +38,18 @@
           </form>
         </div>
 
+      </div>
+      <div class="raw">
+        <div class=" pt-3 d-flex justify-content-center">
+          <pagination-controls
+            previousLabel="Prev"
+            nextLabel="Next"
+            [responsive]="true"
+            (pageChange)="handlePageChange($event)"
+            (pageBoundsCorrection)="handlePageChange($event)"
+          >
+          </pagination-controls>
+        </div>
       </div>
       <div>
         <table class="table table-bordered table-hover table-primary table-responsive table-responsive-lg">
@@ -79,15 +91,7 @@
       </div>
 
     </div>
-    <div class="col-md-12 paginationCss">
-      <pagination-controls
-        previousLabel="Prev"
-        nextLabel="Next"
-        [responsive]="true"
-        (pageChange)="handlePageChange($event)"
-        (pageBoundsCorrection)="handlePageChange($event)"
-      ></pagination-controls>
-    </div>
+
   </div>
 </div>
 <ng-template #loggedOut>

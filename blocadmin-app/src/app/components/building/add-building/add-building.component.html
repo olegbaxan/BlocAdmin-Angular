@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <div class="row">
     <div class="col-12" *ngIf="building"
          style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
@@ -9,18 +9,21 @@
           <div class="form-group form-group-sm col-sm-8 m-5">
             <div class="row">
               <label for="address" class="col-sm-3 col-form-label">Address</label>
-              <div class="col-sm-9">
+              <div class="col-sm-6">
                 <ng-select class="custom" id="address"
                            [searchable]="true"
                            [multiple]="false"
                            [(ngModel)]=selectedAddress>
-                  <ng-option *ngFor="let address of addresses" [value]="address">{{address.city}} {{address.raion}} {{address.street}} {{address.houseNumber}}</ng-option>
+                  <ng-option *ngFor="let address of addresses"
+                             [value]="address">{{address?.city}} {{address?.raion}} {{address?.street}} {{address?.houseNumber}}
+                    <span *ngIf="address?.entranceNo">/{{address?.entranceNo}}</span></ng-option>
                 </ng-select>
               </div>
+              <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/address/add">New Address</button>
             </div>
 
           </div>
-          <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/address/add">Add New Address</button>
+
           <div class="form-group form-group-sm col-sm-8 m-5">
             <div class="row">
               <label for="floor" class="col-sm-3 col-form-label">Floor Numbers</label>
@@ -53,5 +56,7 @@
     </div>
   </div>
 </div>
-
+<ng-template #loggedOut>
+  Please login.
+</ng-template>
 

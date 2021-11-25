@@ -5,6 +5,9 @@ import {FlatService} from "../../../services/flat.service";
 import {PersonService} from "../../../services/person.service";
 import {MeterService} from "../../../services/meter.service";
 import {Person} from "../../../model/Person";
+import {Meter} from "../../../model/Meter";
+import {Building} from "../../../model/Building";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-edit-flat',
@@ -19,15 +22,19 @@ export class EditFlatComponent implements OnInit {
   persons: any = [];
   buildings: any = [];
   meters: any = [];
-  selectedPerson: any = [];
-  selectedMeters: Person[] = [];
-  selectedBuilding: any;
+  selectedPerson: Person[] = [];
+  selectedMeters: Meter[] = [];
+  selectedBuilding: Building|undefined;
   constructor(private flatService: FlatService,
               private personService: PersonService,
               private buildingService: BuildingService,
               private meterService: MeterService,
               private route: ActivatedRoute,
-              private router: Router,) { }
+              private router: Router,
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.message = '';
@@ -41,11 +48,19 @@ export class EditFlatComponent implements OnInit {
     this.flatService.getPersons()
       .subscribe(
         response => {
+          this.persons=[];
           for (let item in response) {
-            response[item].bindName = response[item].name + " " + response[item].surname;
-            this.persons.push(response[item]);
-            console.log("Persons ",this.persons)
+            console.log("response roles ",response[item].roles)
+            console.log("response person ",response[item].name)
+
+            for (var i in response[item].roles) {
+              if (response[item].roles[i].name === "ROLE_USER") {
+                response[item].bindName = response[item].name + " " + response[item].surname;
+                this.persons.push(response[item]);
+              }
+            }
           }
+          console.log("Persons",this.persons);
         },
         error => {
           console.log(error);
@@ -56,6 +71,7 @@ export class EditFlatComponent implements OnInit {
     this.flatService.getMeters()
       .subscribe(
         response => {
+          this.meters=[];
           for (let item in response) {
             response[item].bindName = response[item].serial + " " + response[item].type;
             this.meters.push(response[item]);
@@ -70,12 +86,18 @@ export class EditFlatComponent implements OnInit {
     this.flatService.getBuildings()
       .subscribe(
         response => {
+          this.buildings=[];
           for (let item in response) {
-            response[item].bindName = response[item].address.city + " " + response[item].address.raion+ " " + response[item].address.street+ " " + response[item].address.houseNumber;
-
+            if(!response[item].entranceNo){
+              response[item].bindName = response[item].address.city + " " + response[item].address.raion+ " " + response[item].address.street+ " " + response[item].address.houseNumber
+            }
+            else {
+              response[item].bindName = response[item].address.city + " " + response[item].address.raion+ " " + response[item].address.street+ " " + response[item].address.houseNumber+"/"+response[item].address.entranceNo;
+            }
             this.buildings.push(response[item]);
-            console.log("this.buildings ",this.buildings );
+
           }
+          console.log("this.buildings ",this.buildings );
         },
         error => {
           console.log(error);
@@ -87,13 +109,23 @@ export class EditFlatComponent implements OnInit {
       .subscribe(
         data => {
           this.flat = data;
-          this.selectedBuilding=data.building.buildingid+" "+data.building.address.city+" "+data.building.address.raion;
-          this.selectedPerson=data.person.name+" "+data.person.surname;
+          for(var i in data.person){
+            data.person[i].bindName=data.person[i].name+" "+data.person[i].surname;
+          }
+          for(var i in data.meter){
+            data.meter[i].bindName=data.meter[i].serial+" "+data.meter[i].serial;
+          }
+          if (data.building.address.entranceNo){
+            data.building.bindName=data.building.address.city+" "+data.building.address.raion+" "+
+              data.building.address.street+" "+ data.building.address.houseNumber+"/"+data.building.address.entranceNo;
+          }else{
+            data.building.bindName=data.building.address.city+" "+data.building.address.raion+" "+ data.building.address.street+" "+ data.building.address.houseNumber;
+
+          }
+          this.selectedBuilding=data.building;
+          this.selectedPerson=data.person;
           this.selectedMeters=data.meter;
-          console.log("this.flat",this.flat);
-          console.log("this.selectedPerson",this.selectedPerson);
-          console.log("this.selectedPerson",this.selectedPerson);
-          console.log("this.selectedMeters",this.selectedMeters);
+          console.log("BuildingSelect",this.selectedBuilding);
         },
         error => {
           console.log(error);
@@ -103,6 +135,8 @@ export class EditFlatComponent implements OnInit {
     this.flat.building=this.selectedBuilding;
     this.flat.person=this.selectedPerson;
     this.flat.meter=this.selectedMeters;
+    console.log("FLAT",this.flat.building);
+    console.log("Build",this.flat);
     this.flatService.editFlat(this.flat.flatid, this.flat)
       .subscribe(
         response => {

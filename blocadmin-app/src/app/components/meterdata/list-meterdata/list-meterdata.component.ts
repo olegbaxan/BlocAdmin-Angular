@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Meter} from "../../../model/Meter";
 import {parameters} from "../../../constants/constants";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -20,9 +20,7 @@ export class ListMeterdataComponent implements OnInit {
   metersdata: MeterData[] = [];
   currentIndex = -1;
   title = '';
-  loggedUserID: string = '';
-  loggedUserName: string = '';
-  isLoggedIn: boolean = false;
+
   page = parameters.page;
   count = parameters.count;
   pageSize = parameters.pageSize;
@@ -30,11 +28,13 @@ export class ListMeterdataComponent implements OnInit {
   constructor(private meterdataService: MeterdataService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,) { }
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.retrieveMeterData();
-    this.getPerson();
   }
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
     // tslint:disable-next-line:prefer-const
@@ -64,6 +64,7 @@ export class ListMeterdataComponent implements OnInit {
           const {meterData, totalItems} = response;
           this.metersdata = meterData;
           this.count = totalItems;
+          console.log("MeterDataList",this.metersdata);
         },
         error => {
           console.log(error);
@@ -79,15 +80,4 @@ export class ListMeterdataComponent implements OnInit {
     this.page = 1;
     this.retrieveMeterData();
   }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
-  }
-
 }

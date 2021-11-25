@@ -1,8 +1,29 @@
-/*.side{*/
-/*  flex: 1;*/
-/*  height: 100vh;*/
-/*  color: white;*/
-/*  background-color: white;*/
-/*  overflow: scroll;*/
-/*  line-height: 100px;*/
-/*}*/
+.modal-dialog {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.modal .modal-content {
+  padding: 20px 20px 20px 20px;
+  -webkit-animation-name: modal-animation;
+  -webkit-animation-duration: 0.5s;
+  animation-name: modal-animation;
+  animation-duration: 1s;
+}
+.li{
+font-size: 16px;
+}
+
+.modal-dialog,
+.modal-content {
+  /* 80% of window height */
+  height: 100%;
+  width: 130%;
+}
+
+.modal-body {
+  /* 100% = dialog height, 120px = header + footer */
+  max-height: calc(100% - 120px);
+  overflow-y: scroll;
+  align-content: normal;
+}

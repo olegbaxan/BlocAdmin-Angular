@@ -1,15 +1,15 @@
 
 export class Person {
 
-  personid: any;
-  username?: string;
-  email?: string;
-  password?:string;
-  roles?:string[];
-  name?:string;
-  surname?:string;
-  description?:string;
-  phone?:string;
-  mobile?:string;
-  idnp?:string;
+  personid?: Number;
+  username?: String;
+  email?: String;
+  password?:String;
+  roles?:String[];
+  name?:String;
+  surname?:String;
+  description?:String;
+  phone?:String;
+  mobile?:String;
+  idnp?:String;
 }

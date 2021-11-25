@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="isLoggedIn; else loggedOut">
+<div class="container-fluid" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <!--<div class="container-fluid">-->
   <div class="row">
     <h2 class="pt-3">List of available Meters</h2>
@@ -31,7 +31,7 @@
             <!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" #search>-->
             <input  type="text"  class="form-control" placeholder="Search word" [(ngModel)]="title" name="query"/>
             <button class="btn btn-success btn-lg text-center" type="button" (click)="retrieveMeters()">Search</button>
-            <a href="/person" class="btn btn-primary btn-lg text-center" role="button" aria-pressed="true">Clear</a>
+            <a href="/meters" class="btn btn-primary btn-lg text-center" role="button" aria-pressed="true">Clear</a>
           </form>
         </div>
 
@@ -47,6 +47,7 @@
             <th class="col-1">Supplier</th>
             <th class="col-1">Contract Person</th>
             <th class="col-1">Flat</th>
+            <th class="col-1">Building</th>
             <th class="col-2" colspan=2>Quick Edit</th>
           </tr>
           </thead>
@@ -60,14 +61,20 @@
                 let i = index"
               align="center" style="font-size: 18px">
             <td>{{meter.serial}}</td>
-            <td>{{meter.meterType?.name}}</td>
+            <td>{{meter.meterDest?.name}}</td>
             <td>{{meter.initialValue}}</td>
-            <td>{{meter.typeOfMeterAndInvoice?.name}}</td>
+            <td>{{meter.typeOfMeterInvoice?.name}}</td>
             <td *ngIf="meter.supplier">{{meter.supplier.supplierName}}</td>
-            <td *ngIf="meter.person">{{meter.person.name}} {{meter.person.surname}}</td>
-            <td *ngIf="meter.flat">{{meter.flat.flatNumber}}</td>
+            <td>{{meter?.person?.name}} {{meter?.person?.surname}}</td>
+            <td>{{meter?.flat?.flatNumber}}</td>
+<!--            <td>{{meter.building?.address?.city}} {{meter.building?.address?.raion}} {{meter.building?.address?.street}} {{meter.building?.address?.houseNumber}}<span *ngIf="meter?.building?.address?.entranceNo">/{{meter?.building?.address?.entranceNo}}</span></td>-->
+<!--            Without entrance&ndash;&gt;-->
+            <td *ngIf="!meter.building?.address?.entranceNo">{{meter.building?.address?.city}} {{meter.building?.address?.raion}} {{meter.building?.address?.street}} {{meter.building?.address?.houseNumber}}</td>
+            <!--            In case if entranceExist-->
+            <td *ngIf="meter.building?.address?.entranceNo">{{meter.building?.address?.city}} {{meter.building?.address?.raion}} {{meter.building?.address?.street}} {{meter.building?.address?.houseNumber}}
+              /{{meter.building?.address?.entranceNo}} </td>
 
-            <td align="center"><a class="btn btn-lg" routerLink="{{meter.meterid}}"><img src="../../../assets/img/edit1.png">Edit</a></td>
+            <td align="center"><a class="btn btn-lg" routerLink="{{meter.meterId}}"><img src="../../../assets/img/edit1.png">Edit</a></td>
           </tr>
         </table>
 

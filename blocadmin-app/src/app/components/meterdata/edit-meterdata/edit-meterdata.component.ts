@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MeterService} from "../../../services/meter.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MeterdataService} from "../../../services/meterdata.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-edit-meterdata',
@@ -20,7 +21,11 @@ export class EditMeterdataComponent implements OnInit {
   constructor(private meterdataService: MeterdataService,
               private meterService: MeterService,
               private route: ActivatedRoute,
-              private router: Router,) { }
+              private router: Router,
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.message = '';
@@ -33,6 +38,7 @@ export class EditMeterdataComponent implements OnInit {
     this.meterdataService.getMeters()
       .subscribe(
         response => {
+          this.meters=[];
           for (let item in response) {
             response[item].bindName = response[item].serial + " " + response[item].flat.flatNumber;
             this.meters.push(response[item]);
@@ -48,6 +54,7 @@ export class EditMeterdataComponent implements OnInit {
     this.meterdataService.getStatus()
       .subscribe(
         response => {
+          this.status=[];
           for (let item in response) {
             response[item].bindName = response[item].name;
             this.status.push(response[item]);

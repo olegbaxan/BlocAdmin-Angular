@@ -4,10 +4,10 @@ import {Status} from "./Status";
 
 export class MeterData {
 
-  meterdataid?: undefined;
+  meterdataid?: Number;
   previousValue?: any;
   currentValue?: any;
-  meterValue?: any;
+  meterValue?: number;
   status?: Status;
   meter?: Meter;
 }

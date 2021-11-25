@@ -4,6 +4,7 @@ import {MeterData} from "../../../model/MeterData";
 import {MeterdataService} from "../../../services/meterdata.service";
 import {Meter} from "../../../model/Meter";
 import {Status} from "../../../model/Status";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-add-meterdata',
@@ -15,11 +16,12 @@ export class AddMeterdataComponent implements OnInit {
   meterdata: MeterData = {
     meterdataid: undefined,
     currentValue: undefined,
-    previousValue: undefined,
+    previousValue:undefined,
     meter: undefined,
     status:undefined,
   };
 
+  difference=false;
   submitted = false;
   meters: Meter[] = [];
   selectedMeter: any;
@@ -28,7 +30,10 @@ export class AddMeterdataComponent implements OnInit {
 
   constructor(private meterdataService: MeterdataService,
               private meterService: MeterService,
-              ) {
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+    this.meterdata.previousValue=0;
   }
 
   ngOnInit(): void {
@@ -40,12 +45,14 @@ export class AddMeterdataComponent implements OnInit {
     this.meterdataService.getMeters()
       .subscribe(
         response => {
-          console.log("Responce",response);
+          this.meters=[];
+          // this.meters=response;
           for (let item in response) {
             response[item].bindName = response[item].serial;
             this.meters.push(response[item]);
-            console.log("Meters ",this.meters)
+
           }
+          console.log("Meters ",this.meters)
         },
         error => {
           console.log(error);
@@ -57,6 +64,7 @@ export class AddMeterdataComponent implements OnInit {
     this.meterdataService.getStatus()
       .subscribe(
         response => {
+          this.status=[];
           this.status = response;
         },
         error => {
@@ -66,6 +74,11 @@ export class AddMeterdataComponent implements OnInit {
   }
 
   saveMeterData(): void {
+    for (let status of this.status){
+      if(status.name=="STATUS_NEW"){
+        this.meterdata.status=status;
+      }
+    }
     const data = {
       previousValue: this.meterdata.previousValue,
       currentValue: this.meterdata.currentValue,
@@ -73,6 +86,7 @@ export class AddMeterdataComponent implements OnInit {
       status: this.meterdata.status,
 
     };
+    console.log("MeterDataCR",data);
     this.meterdataService.createMeterData(data)
       .subscribe(
         response => {
@@ -98,10 +112,11 @@ export class AddMeterdataComponent implements OnInit {
 
   getPreviousValue() {
 
-    const meterid = this.selectedMeter.meterid;
+    const meterid = this.selectedMeter.meterId;
+    console.log("Meter",this.selectedMeter.meterId);
     this.meterdataService.getPreviuosMeterData(meterid)
       .subscribe(
-        response => {
+        (response:number) => {
           if(response==null){
             this.meterdata.previousValue=this.selectedMeter.initialValue;
           }else {
@@ -111,5 +126,12 @@ export class AddMeterdataComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+
+  enterCurrentValue(event: any) {
+    if(event.target.value<=this.meterdata!.previousValue){
+      this.difference=true;
+    }
+
   }
 }

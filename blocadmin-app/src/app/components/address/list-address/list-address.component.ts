@@ -4,7 +4,7 @@ import {AddressService} from "../../../services/address.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Address} from "../../../model/Address";
 import {parameters} from "../../../constants/constants";
-import {LoginComponent} from "../../../components/auth/login/login.component";
+
 
 
 @Component({
@@ -30,6 +30,7 @@ export class ListAddressComponent implements OnInit {
   count = parameters.count;
   pageSize = parameters.pageSize;
   pageSizes = parameters.pageSizes;
+
 
 
   constructor(
@@ -72,9 +73,6 @@ export class ListAddressComponent implements OnInit {
           const { addresses, totalItems } = response;
           this.addresses = addresses;
           this.count = totalItems;
-          console.log(addresses);
-          console.log(totalItems);
-          console.log(response);
         },
         error => {
           console.log(error);

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <div class="row">
     <div class="col-12" *ngIf="flat"
          style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
@@ -9,11 +9,53 @@
 
           <div class="form-group form-group-sm col-sm-8 m-5">
             <div class="row">
+              <label for="building" class="col-sm-3 col-form-label">Building</label>
+              <div class="col-sm-9">
+                <ng-select class="custom" id="building"
+                           (change)="select()"
+                           [searchable]="true"
+                           [multiple]="false"
+                           [(ngModel)]=selectedBuilding>
+                  <ng-option *ngFor="let building of buildings"
+                             [value]="building">{{building?.address?.city}} {{building?.address?.raion}} {{building?.address?.street}} {{building?.address?.houseNumber}}
+                    <span *ngIf="building?.address?.entranceNo">/{{building?.address?.entranceNo}}</span></ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/buildings/add">Add New
+            Building
+          </button>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
+              <label for="person" class="col-sm-3 col-form-label">Person</label>
+              <div class="col-sm-9">
+                <ng-select class="custom" id="person"
+                           [searchable]="true"
+                           [multiple]="true"
+                           [(ngModel)]=selectedPerson>
+                  <ng-option *ngFor="let person of persons"
+                             [value]="person">{{person.name}} {{person.surname}}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/person/add">Add New Person
+          </button>
+          <div class="form-group form-group-sm col-sm-8 m-5">
+            <div class="row">
               <label for="flatnumber" class="col-sm-3 col-form-label">Flat number</label>
               <div class="col-sm-9">
-                <input type="number" min="0" class="form-control" id="flatnumber" placeholder="Enter flat number"
-                       [(ngModel)]="flat.flatNumber"
-                       name="flatNumber" required="true">
+                <input type="number" min="0" [max]="selectedBuilding?.flats" class="form-control" id="flatnumber" placeholder="Enter flat number"
+                       [(ngModel)]="flat.flatNumber" name="flatNumber" required="true" (change)="chooseFlatNumber($event)">
+              </div>
+            </div>
+          </div>
+          <div class=" form-group form-group-sm col-sm-6 m-5 " *ngIf="flatError">
+            <div class="row">
+              <label class="col-sm-3 col-form-label"></label>
+              <div class="alert-danger  col-sm-9">
+                Flat Number is bigger then exists
               </div>
             </div>
           </div>
@@ -21,22 +63,20 @@
             <div class="row">
               <label for="floor" class="col-sm-3 col-form-label">Floor</label>
               <div class="col-sm-9">
-                <input type="number" min="0" class="form-control" id="floor" placeholder="Enter floor number"
-                       [(ngModel)]="flat.floor" name="floor" required="true">
+                <input type="number" min="0" [max]="selectedBuilding?.floors" class="form-control" id="floor" placeholder="Enter floor number"
+                       [(ngModel)]="flat.floor" name="floor" required="true" (change)="chooseFloorNumber($event)">
               </div>
             </div>
           </div>
 
-          <div class="form-group form-group-sm col-sm-8 m-5">
+          <div class=" form-group form-group-sm col-sm-6 m-5 " *ngIf="floorError">
             <div class="row">
-              <label for="ladder" class="col-sm-3 col-form-label">Ladder</label>
-              <div class="col-sm-9">
-                <input type="number" min="1" class="form-control" id="ladder" placeholder="Enter ladder number"
-                       [(ngModel)]="flat.ladder" name="ladder" required="true">
+              <label class="col-sm-3 col-form-label"></label>
+              <div class="alert-danger  col-sm-9">
+                Floor Number is bigger then exists
               </div>
             </div>
           </div>
-
           <div class="form-group form-group-sm col-sm-8 m-5">
             <div class="row">
               <label for="wallet" class="col-sm-3 col-form-label">Wallet</label>
@@ -56,56 +96,6 @@
             </div>
           </div>
 
-          <div class="form-group form-group-sm col-sm-8 m-5">
-            <div class="row">
-              <label for="person" class="col-sm-3 col-form-label">Person</label>
-              <div class="col-sm-9">
-                <ng-select class="custom" id="person"
-                           [searchable]="true"
-                           [multiple]="true"
-                           [(ngModel)]=selectedPerson>
-                  <ng-option *ngFor="let person of persons"
-                             [value]="person">{{person.name}} {{person.surname}}</ng-option>
-                </ng-select>
-              </div>
-            </div>
-          </div>
-          <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/person/add">Add New Person
-          </button>
-
-          <div class="form-group form-group-sm col-sm-8 m-5">
-            <div class="row">
-              <label for="building" class="col-sm-3 col-form-label">Building</label>
-              <div class="col-sm-9">
-                <ng-select class="custom" id="building"
-                           [searchable]="true"
-                           [multiple]="false"
-                           [(ngModel)]=selectedBuilding>
-                  <ng-option *ngFor="let building of buildings"
-                             [value]="building">{{building.buildingid}} {{building.address.city}} {{building.address.raion}} {{building.address.street}} {{building.address.houseNumber}}</ng-option>
-                </ng-select>
-              </div>
-            </div>
-          </div>
-          <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/buildings/add">Add New
-            Building
-          </button>
-
-          <div class="form-group form-group-sm col-sm-8 m-5">
-            <div class="row">
-              <label for="meter" class="col-sm-3 col-form-label">Meters</label>
-              <div class="col-sm-9">
-                <ng-select class="custom" id="meter"
-                           [searchable]="true"
-                           [multiple]="true"
-                           [(ngModel)]=selectedMeters>
-                  <ng-option *ngFor="let meter of meters" [value]="meters">{{meters}} {{meters.address}}</ng-option>
-                </ng-select>
-              </div>
-            </div>
-
-          </div>
-
           <button type="cancel" class="btn btn-danger btn-lg m-5 col-sm-2" routerLink="/meters/add">Add New Meter
           </button>
 
@@ -122,5 +112,7 @@
     </div>
   </div>
 </div>
-
+<ng-template #loggedOut>
+  Please login.
+</ng-template>
 

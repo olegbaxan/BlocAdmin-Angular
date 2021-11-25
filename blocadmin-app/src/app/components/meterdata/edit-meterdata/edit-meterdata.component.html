@@ -1,5 +1,5 @@
-<!--<div class="container" *ngIf="; else loggedOut">-->
-<div class="container" >
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
+<!--<div class="container" >-->
   <div class="col-12" *ngIf="meterdata"
        style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
     <h2 class="justify-content-center m-3">MeterData attributes to Edit</h2>
@@ -63,7 +63,7 @@
 <!--</div>-->
 <div *ngIf="!meterdata">
   <br/>
-  <p>Cannot access this Meter...</p>
+  <p>Cannot access this MeterData...</p>
 </div>
 
 <ng-template #loggedOut>

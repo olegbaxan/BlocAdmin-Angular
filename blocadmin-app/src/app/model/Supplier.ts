@@ -3,11 +3,11 @@ import {Address} from "./Address";
 
 export class Supplier {
 
-  supplierid: any;
-  supplierName?: string;
-  IBAN?: string;
-  fiscalCode?: string;
-  bankCode?: string;
-  details?: string;
+  supplierid?: Number;
+  supplierName?: String;
+  IBAN?: String;
+  fiscalCode?: String;
+  bankCode?: String;
+  details?: String;
   address?: Address;
 }

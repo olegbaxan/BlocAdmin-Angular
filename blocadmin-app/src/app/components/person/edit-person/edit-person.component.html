@@ -1,4 +1,4 @@
-<div class="container" *ngIf="person; else loggedOut">
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <div class="col-12" *ngIf="person"
        style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
     <h2 class="justify-content-center m-3">Address attributes to Edit</h2>
@@ -39,11 +39,12 @@
             </div>
         </div>
       </div>
-      <div class="form-group form-group-sm col-sm-6 m-5">
+      <div class="form-group form-group-sm col-sm-6 m-5" >
         <div class="row">
           <label for="role" class="col-sm-3 col-form-label">Roles</label>
           <div class="col-sm-9">
           <ng-select class="custom" id="role" [items]="roles"
+                     [disabled]="!tokenStorageService.isAdmin"
               bindLabel="name"
               placeholder=""
               appendTo="body"
@@ -88,7 +89,7 @@
         </div>
       </div>
       <button type="submit" class="btn btn-success m-5 btn-lg" (click)="updatePerson(playlistForm)">Submit</button>
-      <button type="cancel" class="btn btn-danger m-5  btn-lg" routerLink="/person">Cancel</button>
+      <button type="cancel" class="btn btn-danger m-5  btn-lg" (click)="backClicked()">Cancel</button>
 
     </form>
   </div>

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {SupplierService} from "../../../services/supplier.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BuildingService} from "../../../services/building.service";
+import {Address} from "../../../model/Address";
+import {el} from "@angular/platform-browser/testing/src/browser_util";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-edit-building',
@@ -14,11 +17,14 @@ export class EditBuildingComponent implements OnInit {
   building:any;
   message = '';
   addresses:any = [];
-  selectedAddress:any=[];
+  selectedAddress:Address=new Address();
   constructor(private buildingService: BuildingService,
               private route: ActivatedRoute,
-              private router: Router,) { }
-
+              private router: Router,
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
   ngOnInit(): void {
     this.message = '';
 
@@ -29,10 +35,17 @@ export class EditBuildingComponent implements OnInit {
     this.buildingService.getAddresses()
       .subscribe(
         response => {
+          this.addresses=[];
           for (let item in response) {
-            response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber;
-            this.addresses.push(response[item]);
+            if(!response[item].entranceNo){
+              response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber
+            }
+            else {
+              response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber+"/"+response[item].entranceNo;
+            }
+                   this.addresses.push(response[item]);
           }
+          console.log("Address",this.addresses);
         },
         error => {
           console.log(error);
@@ -42,8 +55,17 @@ export class EditBuildingComponent implements OnInit {
     this.buildingService.getById(id)
       .subscribe(
         data => {
+          if(!data.address.entranceNo){
+            data.address.bindName = data.address.city + " " + data.address.raion+ " " + data.address.street+ " " + data.address.houseNumber;
+          }
+          else {
+            data.address.bindName = data.address.city + " " + data.address.raion+ " " + data.address.street+ " " + data.address.houseNumber+"/"+data.address.entranceNo;
+          }
           this.building = data;
-          this.selectedAddress=data.address.city+" "+data.address.raion+" "+data.address.street+" "+data.address.houseNumber;
+          this.selectedAddress=data.address;
+
+          console.log("Data",data)
+          console.log("this.selectedAddress",this.selectedAddress)
         },
         error => {
           console.log(error);

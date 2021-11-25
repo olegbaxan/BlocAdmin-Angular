@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="isLoggedIn; else loggedOut">
+<div class="container-fluid" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <!--<div class="container-fluid">-->
   <div class="row">
     <h2 class="pt-3">List of available Invoices</h2>
@@ -36,6 +36,15 @@
         </div>
 
       </div>
+      <div class="col-md-12 paginationCss">
+        <pagination-controls
+          previousLabel="Prev"
+          nextLabel="Next"
+          [responsive]="true"
+          (pageChange)="handlePageChange($event)"
+          (pageBoundsCorrection)="handlePageChange($event)"
+        ></pagination-controls>
+      </div>
       <div>
         <table class="table table-bordered table-hover table-primary table-responsive table-responsive-lg">
           <thead class="thead-dark">
@@ -50,6 +59,8 @@
             <th class="col-1">Pay date</th>
             <th class="col-1">Meter</th>
             <th class="col-1">Supplier</th>
+            <th class="col-1">Buildings</th>
+            <th class="col-2">Attachement</th>
             <th class="col-2" colspan=2>Quick Edit</th>
           </tr>
           </thead>
@@ -70,9 +81,14 @@
             <td>{{invoice.payTill}}</td>
             <td>{{invoice.emittedDate}}</td>
             <td>{{invoice.dateOfPay}}</td>
-            <td *ngIf="invoice.supplier">{{invoice.supplier.supplierName}}</td>
-            <td *ngIf="invoice.meter">{{invoice.meter.serial}}</td>
-
+            <td>{{invoice.meter?.serial}}</td>
+            <td>{{invoice.supplier?.supplierName}}</td>
+            <td><span *ngFor="let building of invoice.buildings">{{building?.address?.city}} {{building?.address?.raion}} {{building?.address?.street}} {{building?.address?.houseNumber}}<span *ngIf="building?.address?.entranceNo">/{{building?.address?.entranceNo}}</span></span></td>
+            <td>
+              <span *ngIf="invoice.fileInfo">
+              <a href="{{invoice.fileInfo?.url}}" download="{{invoice.fileInfo?.name}}">Download</a>
+                </span>
+            </td>
             <td align="center"><a class="btn btn-lg" routerLink="{{invoice.invoiceId}}"><img
               src="../../../assets/img/edit1.png">Edit</a></td>
           </tr>
@@ -81,15 +97,7 @@
       </div>
 
     </div>
-    <div class="col-md-12 paginationCss">
-      <pagination-controls
-        previousLabel="Prev"
-        nextLabel="Next"
-        [responsive]="true"
-        (pageChange)="handlePageChange($event)"
-        (pageBoundsCorrection)="handlePageChange($event)"
-      ></pagination-controls>
-    </div>
+
   </div>
 </div>
 <ng-template #loggedOut>

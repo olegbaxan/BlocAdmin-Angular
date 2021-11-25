@@ -44,6 +44,16 @@ import { AddFlatComponent } from './components/flat/add-flat/add-flat.component'
 import { AddBuildingComponent } from './components/building/add-building/add-building.component';
 import { EditBuildingComponent } from './components/building/edit-building/edit-building.component';
 import { ListBuildingComponent } from './components/building/list-building/list-building.component';
+import { UploadImagesComponent } from './components/file/upload-images/upload-images.component';
+import { BulkMeterdataComponent } from './components/meterdata/bulk-meterdata/bulk-meterdata.component';
+import { AddPaymentComponent } from './components/payment/add-payment/add-payment.component';
+import { EditPaymentComponent } from './components/payment/edit-payment/edit-payment.component';
+import { ListPaymentComponent } from './components/payment/list-payment/list-payment.component';
+import { BulkaddMeterdataComponent } from './components/meterdata/bulkadd-meterdata/bulkadd-meterdata.component';
+import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+import {PasswordResetComponent} from "./components/auth/password-reset/password-reset.component";
+
+
 
 @NgModule({
   declarations: [
@@ -82,20 +92,29 @@ import { ListBuildingComponent } from './components/building/list-building/list-
     AddBuildingComponent,
     EditBuildingComponent,
     ListBuildingComponent,
+    UploadImagesComponent,
+    BulkMeterdataComponent,
+    AddPaymentComponent,
+    EditPaymentComponent,
+    ListPaymentComponent,
+    BulkaddMeterdataComponent,
+    ForgotPasswordComponent,
+    PasswordResetComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgbPaginationModule,
-    NgbAlertModule,
-    NgbAccordionModule,
-    BrowserAnimationsModule,
-    NgxPaginationModule,
-    NgSelectModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        NgbPaginationModule,
+        NgbAlertModule,
+        NgbAccordionModule,
+        BrowserAnimationsModule,
+        NgxPaginationModule,
+        NgSelectModule,
+
+    ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })

@@ -25,10 +25,10 @@ body {
 
 .form_wrapper {
   background: #fff;
-  width: 500px;
+  width: 600px;
   max-width: 100%;
   box-sizing: border-box;
-  padding: 2px;
+  padding: 50px;
   margin: 8% auto 0;
   position: relative;
   z-index: 1;

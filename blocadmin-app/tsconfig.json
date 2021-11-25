@@ -20,9 +20,11 @@
       "es2018",
       "dom"
     ],
+
     //Addded due to errors
     "paths": {
-      "@angular/*": ["./node_modules/@angular/*"]
+      "@angular/*": ["./node_modules/@angular/*"],
+
     }
   },
   "angularCompilerOptions": {

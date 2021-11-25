@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Building} from "../../../model/Building";
 import {AddressService} from "../../../services/address.service";
 import {BuildingService} from "../../../services/building.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-add-building',
@@ -18,11 +19,14 @@ export class AddBuildingComponent implements OnInit {
 
   submitted = false;
   addresses: any = [];
-  selectedAddress: any = [];
+  selectedAddress: any ;
 
   constructor(private buildingService: BuildingService,
-              private addressService: AddressService) {
-  }
+              private addressService: AddressService,
+              public tokenStorageService:TokenStorageService,)
+{
+  this.tokenStorageService.getPersonData();
+}
 
   ngOnInit(): void {
     this.getAllAddresses();
@@ -32,10 +36,9 @@ export class AddBuildingComponent implements OnInit {
     this.buildingService.getAddresses()
       .subscribe(
         response => {
-          for (let item in response) {
-            response[item].bindName = response[item].city + " " + response[item].raion+ " " + response[item].street+ " " + response[item].houseNumber;
-            this.addresses.push(response[item]);
-          }
+          this.addresses=[];
+            this.addresses=response;
+          // }
         },
         error => {
           console.log(error);
@@ -65,12 +68,13 @@ export class AddBuildingComponent implements OnInit {
 
   newBuilding(): void {
     this.submitted = false;
-
+this.selectedAddress=undefined;
     this.building = {
       buildingid: undefined,
       flats: undefined,
       floors: undefined,
       address: undefined,
+
     };
   }
 }

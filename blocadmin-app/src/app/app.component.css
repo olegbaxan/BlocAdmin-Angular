@@ -10,13 +10,13 @@ html {
   color: white;
   background-color: white;
   overflow: scroll;
-  line-height: 100px;
+  /*line-height: 100px;*/
 }
 
 .content{
   flex: 15;
   height: 100vh;
-  /*background-color: lightgray;*/
+  background-color: #fafafa;
   overflow: scroll;
-  line-height: 100px;
+  line-height: 20px;
 }

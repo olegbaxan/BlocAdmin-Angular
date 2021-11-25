@@ -35,25 +35,12 @@ export class ListPersonComponent implements OnInit {
   constructor(private personService: PersonService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,
-              ) {
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
   }
-getPerson() {
-  const personKey = this.tokenStorageService.getPerson();
-  if (personKey) {
-    this.isLoggedIn=true;
-    this.loggedUserID=personKey.id;
-    this.loggedUserName=personKey.username;
-    console.log("PersonDataUN",personKey.username);
-    console.log("PersonDataRoles",personKey.roles);
-    console.log("PersonData",personKey);
-  }else {
-    this.router.navigate(['/login']);
-  }
-}
   ngOnInit(): void {
     this.retrievePersons();
-    this.getPerson();
   }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
@@ -83,6 +70,7 @@ getPerson() {
         response => {
           const {persons, totalItems} = response;
           this.persons = persons;
+          console.log("Persons",this.persons);
           this.count = totalItems;
         },
         error => {

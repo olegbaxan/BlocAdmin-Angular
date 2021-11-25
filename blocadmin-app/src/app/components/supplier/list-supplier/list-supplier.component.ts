@@ -21,9 +21,6 @@ export class ListSupplierComponent implements OnInit {
   suppliers: Supplier[] = [];
   currentIndex = -1;
   title = '';
-  loggedUserID: string = '';
-  loggedUserName: string = '';
-  isLoggedIn: boolean = false;
   page = parameters.page;
   count = parameters.count;
   pageSize = parameters.pageSize;
@@ -32,13 +29,13 @@ export class ListSupplierComponent implements OnInit {
   constructor(private supplierService: SupplierService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,
-  ) {
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
   }
 
   ngOnInit(): void {
     this.retrieveSuppliers();
-    this.getPerson();
   }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
@@ -84,15 +81,5 @@ export class ListSupplierComponent implements OnInit {
     this.pageSize = event.target.value;
     this.page = 1;
     this.retrieveSuppliers();
-  }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
   }
 }

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <div class="row">
     <div class="col-12" *ngIf="supplier"
          style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
@@ -58,7 +58,7 @@
                            [searchable]="true"
                            [multiple]="false"
                            [(ngModel)]=selectedAddress>
-                  <ng-option *ngFor="let address of addresses" [value]="address">{{address.city}} {{address.raion}} {{address.street}} {{address.houseNumber}}</ng-option>
+                  <ng-option *ngFor="let address of addresses" [value]="address">{{address.city}} {{address.raion}} {{address.street}} {{address.houseNumber}}<span *ngIf="supplier?.address?.entranceNo">/{{supplier?.address?.entranceNo}}</span></ng-option>
                 </ng-select>
 
               </div>
@@ -81,4 +81,6 @@
     </div>
   </div>
 </div>
-
+<ng-template #loggedOut>
+  Please login.
+</ng-template>

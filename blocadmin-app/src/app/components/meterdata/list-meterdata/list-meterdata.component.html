@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="isLoggedIn; else loggedOut">
+<div class="container-fluid" *ngIf="tokenStorageService.isLoggedIn; else loggedOut">
   <!--<div class="container-fluid">-->
   <div class="row">
     <h2 class="pt-3">List of Meters Data</h2>
@@ -7,6 +7,14 @@
         <div class="col-2">
           <a class="btn btn-light btn-lg m-3" routerLink="add"><img src="../../../assets/img/new1.png">Add New</a>
         </div>
+        <div class="col-2">
+          <a class="btn btn-light btn-lg m-3" routerLink="bulk"><img src="../../../assets/img/new1.png">Bulk</a>
+        </div>
+        <div class="col-2">
+          <a class="btn btn-light btn-lg m-3" routerLink="bulkadd"><img src="../../../assets/img/new1.png">Bulk ADD</a>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-3">
           <form class="d-flex" action="list" method="get">
             <div class="dataTables_length bs-select" id="dtBasicExample_length">

@@ -29,7 +29,10 @@ export class ListFlatComponent implements OnInit {
   constructor(private flatService: FlatService,
               private route: ActivatedRoute,
               private router: Router,
-              private tokenStorageService:TokenStorageService,) { }
+              public tokenStorageService:TokenStorageService,)
+  {
+    this.tokenStorageService.getPersonData();
+  }
 
   ngOnInit(): void {
     this.retrieveFlats();

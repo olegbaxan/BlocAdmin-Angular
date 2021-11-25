@@ -1,4 +1,356 @@
-<!--  <div class="side col-1">-->
-<!--          <app-leftmenu></app-leftmenu>-->
-<!--  </div>-->
-<!--<app-root></app-root>-->
+<div class="container" *ngIf="!tokenStorageService.isManager && !tokenStorageService.isAdmin">
+<div class="row pt-5">
+  <div class="col-sm-6">
+    <div class="card bg-info">
+      <div class="card-body">
+<!--        <a href="/forgotpassword" routerLinkActive="active">Forgot your password?</a>-->
+        <h5 class="card-title">User Information</h5>
+        <ul style="list-style-type:none;">
+          <li>Username: {{person?.username}}</li>
+          <li>Name: {{person?.name}}</li>
+          <li>Surname: {{person?.surname}}</li>
+          <li>Email: {{person?.email}}</li>
+          <li>Mobile: {{person?.mobile}}</li>
+          <li>Phone: {{person?.phone}}</li>
+          <li>IDNP: {{person?.idnp}}</li>
+        </ul>
+        <button type="submit" class="btn btn-light" data-bs-toggle="modalPerson" data-bs-target="#myModalPerson" (click) = "showEditPerson()">
+        Edit
+      </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Last 10 Personal Invoices</h5>
+        <ul style="list-style-type:none;" *ngFor="let invoice of invoices;let i=index">
+          <li>{{i+1}}.
+            <!-- Button trigger modal -->
+            <button type="submit" class="btn" data-bs-toggle="modal" data-bs-target="#myModal" (click) = "showInvoices(i)">
+              {{invoice?.invoiceNumber}}
+            </button>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="row pt-5">
+    <div class="col-sm-6">
+      <div class="card bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Last 10 Payments</h5>
+          <ul style="list-style-type:none;" *ngFor="let pay of payments;let i=index">
+            <li>{{i+1}}.
+              <!-- Button trigger modal -->
+              <button type="submit" class="btn" data-bs-toggle="modalPay" data-bs-target="#myModalPay" (click) = "showPayments(i)">
+                {{pay?.payDate}}
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Last 10 Supplier Invoices</h5>
+          <ul style="list-style-type:none;" *ngFor="let invoice of invoicesS;let i=index">
+            <li>{{i+1}}.
+              <!-- Button trigger modal -->
+              <button type="submit" class="btn" data-bs-toggle="modalS" data-bs-target="#myModalS" (click) = "showInvoicesS(i)">
+                {{invoice?.invoiceNumber}}
+              </button>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Personal Invoices-->
+<div class="container text-center my-5">
+  <div class="modal" id="myModal" [style.display]="showModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">{{ selectedInvoice?.invoiceNumber }}</h4>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="table" style="background-color:azure;">
+            <table>
+            <tr class="align-content-start">
+              <td colspan="4">Invoice total sum:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.invoiceSum }}</b></td>
+            </tr>
+            <tr>
+              <td colspan="4">Previous:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.meterDataPrevious }}</b></td>
+            </tr>
+            <tr>
+              <td colspan="4">Current:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.meterDataCurrent }}</b></td>
+            </tr>
+            <tr>
+              <td colspan="4">Invoice Unit Price:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.unitPrice }}</b></td>
+            </tr>
+            <tr>
+              <td colspan="4">Emitted Date:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.emittedDate }}</b></td>
+            </tr>
+            <tr>
+              <td colspan="4">Pay Term:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.payTill }}</b></td>
+            </tr>
+            <tr>
+              <td colspan="4">Supplier:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.supplier?.supplierName }}</b></td>
+            </tr>
+            <tr *ngIf="selectedInvoice?.invoiceFile">
+              <td colspan="4">Invoice:</td>
+              <td colspan="5"><b>{{ selectedInvoice?.invoiceFile }}</b></td>
+            </tr>
+
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click) = "hideModals()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Supplier Invoices-->
+<div class="container text-center my-5">
+  <div class="modal" id="myModalS" [style.display]="showModalS ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">{{ selectedInvoiceS?.invoiceNumber }}</h4>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="table" style="background-color:azure;">
+            <table>
+              <tr class="align-content-start">
+                <td colspan="4">Invoice total sum:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.invoiceSum }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Previous:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.meterDataPrevious }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Current:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.meterDataCurrent }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Invoice Unit Price:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.unitPrice }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Emitted Date:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.emittedDate }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Pay Term:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.payTill }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Supplier:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.supplier?.supplierName }}</b></td>
+              </tr>
+              <tr *ngIf="selectedInvoiceS?.invoiceFile">
+                <td colspan="4">Invoice:</td>
+                <td colspan="5"><b>{{ selectedInvoiceS?.invoiceFile }}</b></td>
+              </tr>
+
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modalS" (click) = "hideModals()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Personal Payments-->
+<div class="container text-center my-5">
+  <div class="modal" id="myModalPay" [style.display]="showModalPay ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">{{ selectedPayment?.payDate }}</h4>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="table" style="background-color:azure;">
+            <table>
+              <tr class="align-content-start">
+                <td colspan="4">Payment sum:</td>
+                <td colspan="5"><b>{{ selectedPayment?.sum }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Flat Number:</td>
+                <td colspan="5"><b>{{ selectedPayment?.flat?.flatNumber }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">City:</td>
+                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.city }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Raion:</td>
+                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.raion }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">Street:</td>
+                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.street }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="4">House Number:</td>
+                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.houseNumber }}</b></td>
+              </tr>
+              <tr *ngIf="selectedPayment?.flat?.building?.address?.entranceNo">
+                <td colspan="4">Entrance:</td>
+                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.entranceNo }}</b></td>
+              </tr>
+
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click) = "hideModals()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Personal Invoices-->
+<div class="container text-center my-10">
+  <div class="modal" id="myModalPerson" [style.display]="showModalPerson ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">{{ person?.name }} {{person?.surname}}</h4>
+        </div>
+
+        <!-- Modal body -->
+        <div class="col-12" *ngIf="person"
+             style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+          <h2 class="justify-content-center m-1">Person Atributes</h2>
+          <form (ngSubmit)="updatePerson(playlistForm)" #playlistForm="ngForm">
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="username" class="col-sm-3 col-form-label">Username</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="username" [(ngModel)]="person.username" name="username"
+                         readonly="true">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="fname" class="col-sm-3 col-form-label">First Name</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="fname" placeholder="Enter First Name" [(ngModel)]="person.name"
+                         name="fname">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="lname" class="col-sm-3 col-form-label">Last Name</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="lname" placeholder="Enter Last Name"
+                         [(ngModel)]="person.surname" name="lname">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="email" class="col-sm-3 col-form-label">Email</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="email" placeholder="Enter Email" [(ngModel)]="person.email" name="email">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="description" class="col-sm-3 col-form-label">Description</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="description" placeholder="Enter Description" [(ngModel)]="person.description" name="description">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="phone" class="col-sm-3 col-form-label">Phone</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="phone" placeholder="Enter Phone Number" [(ngModel)]="person.phone" name="phone">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="mobile" class="col-sm-3 col-form-label">Mobile</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile Number" [(ngModel)]="person.mobile" name="mobile">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-group-sm col-sm-12 m-2 ">
+              <div class="row">
+                <label for="idnp" class="col-sm-3 col-form-label">IDNP</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="idnp" placeholder="Enter IDNP" [(ngModel)]="person.idnp" name="idnp">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success m-5 btn-lg" (click)="updatePerson(playlistForm)">Submit</button>
+            <button type="cancel" class="btn btn-danger m-5  btn-lg" (click)="backClicked()">Cancel</button>
+
+          </form>
+        </div>
+
+<!--         Modal footer-->
+        <div class="modal-footer">
+
+<!--          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click) = "hideModals()">Close</button>-->
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

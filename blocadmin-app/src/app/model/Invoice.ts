@@ -1,19 +1,28 @@
 import {Meter} from "./Meter";
-import {TypeOfMeterAndInvoice} from "./TypeOfMeterAndInvoice";
+import {TypeOfMeterInvoice} from "./TypeOfMeterInvoice";
 import {Supplier} from "./Supplier";
+import {Status} from "./Status";
+import {Building} from "./Building";
 
 export class Invoice {
 
-  invoiceId: undefined;
-  invoiceNumber?: string;
-  meterDataCurrent?: any;
-  meterDataPrevious?: any;
-  invoiceSum?: any;
-  unitPrice?: any;
-  payTill?: any;
-  emittedDate?: any;
-  dateOfPay?: any;
-  typeOfMeterAndInvoice: TypeOfMeterAndInvoice | undefined;
+  invoiceId?: Number;
+  invoiceNumber?: String;
+  meterDataCurrent?: Number;
+  meterDataPrevious?: Number;
+  invoiceSum?: Number;
+  unitPrice?: Number;
+  payTill?: Date;
+  emittedDate?: Date;
+  dateOfPay?: Date;
+  typeOfMeterInvoice: TypeOfMeterInvoice | undefined;
+  status: Status | undefined;
   supplier?: Supplier;
   meter?: Meter;
+  buildings?: Building[];
+  invoiceFileId?:any;
+  invoiceFile?:any;
+  fileInfo?:any;
+  hasMeter:boolean=true;
+  countData?:Number;
 }

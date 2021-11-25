@@ -15,7 +15,8 @@ export class AddAddressComponent implements OnInit {
     city: '',
     raion: '',
     street: '',
-    houseNumber:''
+    houseNumber:'',
+    entranceNo:undefined,
   };
   submitted = false;
 
@@ -30,6 +31,7 @@ export class AddAddressComponent implements OnInit {
       raion: this.address.raion,
       street:this.address.street,
       houseNumber: this.address.houseNumber,
+      entranceNo: this.address.entranceNo,
     };
 
     this.addressService.createAddress(data)
@@ -50,7 +52,8 @@ export class AddAddressComponent implements OnInit {
       city: '',
       raion: '',
       street:'',
-      houseNumber: ''
+      houseNumber: '',
+      entranceNo:undefined,
     };
   }
 }
