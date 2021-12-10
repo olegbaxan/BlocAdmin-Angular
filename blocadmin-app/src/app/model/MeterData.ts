@@ -10,4 +10,6 @@ export class MeterData {
   meterValue?: number;
   status?: Status;
   meter?: Meter;
+  title?:String;
+  published?:String;
 }

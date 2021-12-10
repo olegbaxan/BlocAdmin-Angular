@@ -37,6 +37,9 @@ export class PersonService {
   editPerson(id:Number|undefined, person:Object|undefined){
     return  this.http.put(this.baseUrl,person);
   }
+  deletePerson(id:Number|undefined){
+    return  this.http.delete(`${this.baseUrl}/${id}`);
+  }
 
   getAll(params: any): Observable<any> {
     return this.http.get<any>(this.baseUrl, { params });

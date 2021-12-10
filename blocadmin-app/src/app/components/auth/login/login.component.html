@@ -6,9 +6,8 @@
       *ngIf="!isLoggedIn" name="form"
       (ngSubmit)="f.form.valid && onSubmit()"
       #f="ngForm"
-      novalidate
-    >
-      <div class="input_field pt-lg-5"> <span><i aria-hidden="true" class="fa fa-user-tag"></i></span>
+      novalidate>
+      <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user-tag"></i></span>
         <input
           type="text"
           name="username"
@@ -56,10 +55,10 @@
           Login failed: {{ errorMessage }}
         </div>
     </form>
-<!--      <a href="/forgotpassword" routerLinkActive="active">Forgot your password?</a>-->
       <a href="#" class="nav-link" routerLink="/forgotpassword">Forgot Password</a>
     <div class="alert alert-success" *ngIf="isLoggedIn">
       Logged in as {{ roles }}.
     </div>
   </div>
+</div>
 </div>

@@ -52,7 +52,8 @@ import { ListPaymentComponent } from './components/payment/list-payment/list-pay
 import { BulkaddMeterdataComponent } from './components/meterdata/bulkadd-meterdata/bulkadd-meterdata.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import {PasswordResetComponent} from "./components/auth/password-reset/password-reset.component";
-
+import { ChangePasswordComponent } from './components/auth/change-password/change-password.component';
+import {DatePipe} from "@angular/common";
 
 
 @NgModule({
@@ -99,7 +100,8 @@ import {PasswordResetComponent} from "./components/auth/password-reset/password-
     ListPaymentComponent,
     BulkaddMeterdataComponent,
     ForgotPasswordComponent,
-    PasswordResetComponent
+    PasswordResetComponent,
+    ChangePasswordComponent
   ],
     imports: [
         BrowserModule,
@@ -113,9 +115,8 @@ import {PasswordResetComponent} from "./components/auth/password-reset/password-
         BrowserAnimationsModule,
         NgxPaginationModule,
         NgSelectModule,
-
     ],
-  providers: [authInterceptorProviders],
+  providers: [authInterceptorProviders,DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,4 +6,6 @@ export class Address {
     street?:string;
     houseNumber?:String;
     entranceNo?:Number;
+    title?:String;
+    published?:String;
 }

@@ -5,6 +5,7 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 import {Flat} from "../../../model/Flat";
 import {FlatService} from "../../../services/flat.service";
 import {Person} from "../../../model/Person";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-list-flat',
@@ -19,9 +20,9 @@ export class ListFlatComponent implements OnInit {
   flats: Flat[]=[];
   currentIndex = -1;
   title = '';
-  loggedUserID: string = '';
-  loggedUserName: string = '';
-  isLoggedIn: boolean = false;
+  // loggedUserID: string = '';
+  // loggedUserName: string = '';
+  // isLoggedIn: boolean = false;
   page = parameters.page;
   count = parameters.count;
   pageSize = parameters.pageSize;
@@ -29,6 +30,7 @@ export class ListFlatComponent implements OnInit {
   constructor(private flatService: FlatService,
               private route: ActivatedRoute,
               private router: Router,
+              private authService: AuthService,
               public tokenStorageService:TokenStorageService,)
   {
     this.tokenStorageService.getPersonData();
@@ -36,7 +38,7 @@ export class ListFlatComponent implements OnInit {
 
   ngOnInit(): void {
     this.retrieveFlats();
-    this.getPerson();
+    // this.getPerson();
   }
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
     // tslint:disable-next-line:prefer-const
@@ -65,11 +67,11 @@ export class ListFlatComponent implements OnInit {
         response => {
           const {flats, totalItems} = response;
           this.flats = flats;
-          console.log("Flats",this.flats);
           this.count = totalItems;
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
   handlePageChange(event: number): void {
@@ -81,16 +83,6 @@ export class ListFlatComponent implements OnInit {
     this.pageSize = event.target.value;
     this.page = 1;
     this.retrieveFlats();
-  }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
   }
 
 

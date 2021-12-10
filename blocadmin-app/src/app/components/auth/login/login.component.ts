@@ -3,6 +3,7 @@ import {AuthService} from "../../../services/auth.service";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {parameters} from "../../../constants/constants";
 import {Router} from "@angular/router";
+import {PersonService} from "../../../services/person.service";
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private tokenStorage: TokenStorageService,
+              private personService: PersonService,
               private router: Router) { }
 
 
@@ -56,6 +58,7 @@ export class LoginComponent implements OnInit {
     );
 
   }
+
   // reloadPage(): void {
   //   window.location.reload();
   // }

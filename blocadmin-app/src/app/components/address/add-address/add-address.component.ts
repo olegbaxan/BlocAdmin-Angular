@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddressService} from "../../../services/address.service";
 import {Address} from "../../../model/Address";
+import {Location} from "@angular/common";
+import {Building} from "../../../model/Building";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-address',
@@ -9,8 +12,7 @@ import {Address} from "../../../model/Address";
   styleUrls: ['./add-address.component.css']
 })
 export class AddAddressComponent implements OnInit {
-
-  address: Address = {
+  form: Address = {
     addressid: undefined,
     city: '',
     raion: '',
@@ -19,26 +21,30 @@ export class AddAddressComponent implements OnInit {
     entranceNo:undefined,
   };
   submitted = false;
+  isSuccessful = false;
 
-  constructor(private addressService: AddressService) { }
+  constructor(private addressService: AddressService,
+              private _location: Location,
+              private router:Router) { }
 
   ngOnInit(): void {
   }
 
   saveAddress(): void {
     const data = {
-      city: this.address.city,
-      raion: this.address.raion,
-      street:this.address.street,
-      houseNumber: this.address.houseNumber,
-      entranceNo: this.address.entranceNo,
+      city: this.form.city,
+      raion: this.form.raion,
+      street:this.form.street,
+      houseNumber: this.form.houseNumber,
+      entranceNo: this.form.entranceNo,
     };
 
     this.addressService.createAddress(data)
       .subscribe(
         response => {
           console.log(response);
-          this.submitted = true;
+          this.isSuccessful = true
+          this.router.navigate(['/address']);
         },
         error => {
           console.log(error);
@@ -47,7 +53,7 @@ export class AddAddressComponent implements OnInit {
 
   newAddress(): void {
     this.submitted = false;
-    this.address = {
+    this.form = {
       addressid: undefined,
       city: '',
       raion: '',
@@ -56,7 +62,11 @@ export class AddAddressComponent implements OnInit {
       entranceNo:undefined,
     };
   }
+  backClicked() {
+    this._location.back();
+  }
 }
+
 // export class AddAddressComponent implements OnInit {
 //
 //   title="Add address form";

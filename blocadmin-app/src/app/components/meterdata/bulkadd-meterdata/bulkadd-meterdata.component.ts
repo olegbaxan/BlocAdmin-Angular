@@ -19,6 +19,7 @@ import {Location} from '@angular/common';
 import {Payments} from "../../../model/Payments";
 import {Status} from "../../../model/Status";
 import {InvoiceService} from "../../../services/invoice.service";
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-bulkadd-meterdata',
@@ -37,9 +38,9 @@ export class BulkaddMeterdataComponent implements OnInit {
   suppliers: Supplier[] = [];
   selectedSupplier: Supplier | undefined;
   buildings: Building[] = [];
-  selectedBuilding: Building | undefined;
+  selectedBuilding: Building[] | undefined;
   invoices: Invoice[] = [];
-  selectedInvoice: Invoice | undefined;
+  selectedInvoice: Invoice|undefined;
   status: Status[] = [];
   flats: Flat[] = [];
   hasEntrances = false;
@@ -74,7 +75,8 @@ export class BulkaddMeterdataComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private _location: Location,
-              public tokenStorageService:TokenStorageService,)
+              public tokenStorageService:TokenStorageService,
+              public datepipe: DatePipe)
   {
     this.tokenStorageService.getPersonData();
     this.metersdata = [];
@@ -99,9 +101,9 @@ export class BulkaddMeterdataComponent implements OnInit {
         error => {
           console.log(error);
         });
-    setTimeout(() => {
-      this.retrieveMeters();
-    }, 1000);
+    // setTimeout(() => {
+    //   this.retrieveMeters();
+    // }, 1000);
   }
 
   getMeterDataById(id: number): Observable<any> {
@@ -198,37 +200,20 @@ export class BulkaddMeterdataComponent implements OnInit {
         });
     // return response;
   }
-
-  getAllFlats(): void {
-    const entrance = new Map<number, number>();
-    // @ts-ignore
-    this.meterdataService.getFlatsByBuilding(this.selectedBuilding?.buildingid)
-      .subscribe(
-        response => {
-          this.flats=[];
-          for (let item in response) {
-            response[item].bindName = response[item].flatNumber + " " + response[item].entrance + " " + response[item].floor;
-            entrance.set(response[item].entrance, response[item].entrance)
-            this.flats.push(response[item]);
-          }
-          if (entrance.size > 1) {
-            this.hasEntrances = true;
-            this.entrances = Array.from(entrance.keys());
-          }
-          console.log("this.flats ", this.flats);
-          console.log("entrance ", entrance);
-          console.log("selectedEntrance ", this.selectedEntrance);
-        },
-        error => {
-          console.log(error);
-        });
-    // return response;
+  getFilteredMeters(buildings:Building[]|undefined) {
+    console.log("Selected Buildings", buildings);
+    if (buildings!=null){
+      for (let i=0;i<buildings?.length;i++){
+        this.meters=[];
+        this.retrieveMeters(buildings[i]);
+      }
+    }
   }
 
-  retrieveMeters() {
+  retrieveMeters(building:Building) {
     this.supp = this.selectedSupplier?.supplierName;
     this.ladd = this.selectedEntrance;
-    this.build = this.selectedBuilding?.buildingid;
+    this.build = building.buildingid;
     const params = this.getRequestParams(this.supp, this.ladd, this.build);
     this.metersdata = [];
     this.meterService.getFilteredMeters(params)
@@ -272,23 +257,48 @@ export class BulkaddMeterdataComponent implements OnInit {
     meterdata.meter = meter;
     meterdata.previousValue = this.prevValue;
     meterdata.currentValue = 0;
+meterdata.status=this.status[0];
+
     this.metersdata.push(meterdata);
     console.log("meterdata:t", this.metersdata);
   }
+  changeStatusSelectedInvoice(invoice:any): void {
+    console.log("invoice", invoice);
+    this.invoiceService.editInvoice(invoice.invoiceId,invoice)
+      .subscribe(
+        response => {
+          console.log(response);
+          this.submitted = true;
 
+        },
+        error => {
+          console.log(error);
+        });
+  }
   saveMeterData(): void {
+    if (this.selectedInvoice){
+      for (let i=0;i<this.metersdata.length;i++) {
+        this.metersdata[i].status = this.status[2];
+      }
+    }
     console.log("SaveMeter", this.metersdata);
     this.meterdataService.createBulkMeterData(this.metersdata)
       .subscribe(
         response => {
           console.log(response);
           this.submitted = true;
+          this.router.navigate(['/meterdata']);
         },
         error => {
           console.log(error);
         });
     if (this.selectedInvoice) {
+
       this.initInvoiceData(this.metersdata);
+
+      this.selectedInvoice.status=this.status[3];
+      console.log("SelectedInvocieBulk",this.selectedInvoice)
+      this.changeStatusSelectedInvoice(this.selectedInvoice);
     }
   }
 
@@ -298,11 +308,12 @@ export class BulkaddMeterdataComponent implements OnInit {
       if ((meterdata.currentValue - meterdata.previousValue) > 0) {
 
         const invoice = new Invoice();
-        invoice.invoiceNumber = meterdata?.meter?.serial + "/" + new Date().toDateString() + "/" + new Date().toTimeString();
+        invoice.invoiceNumber = this.selectedInvoice?.invoiceNumber + "/" + this.datepipe.transform(Date.now(),"YYYY/MM/dd/HH:MM:SS"
+        +"/"+meterdata.meter?.flat?.flatNumber+"/"+meterdata.meter?.flat?.flatid);
         invoice.meterDataCurrent = meterdata.currentValue;
         invoice.meterDataPrevious = meterdata.previousValue;
         // @ts-ignore
-        invoice.invoiceSum = Math.round((meterdata.currentValue - meterdata.previousValue) * this.selectedInvoice?.unitPrice);
+        invoice.invoiceSum = ((meterdata.currentValue - meterdata.previousValue) * this.selectedInvoice?.unitPrice).toFixed(2);
         invoice.unitPrice = this.selectedInvoice?.unitPrice;
         if (invoice.payTill) {
           invoice.payTill = this.selectedInvoice?.payTill;
@@ -314,28 +325,10 @@ export class BulkaddMeterdataComponent implements OnInit {
         invoice.supplier = meterdata?.meter?.supplier;
         invoice.meter = meterdata.meter;
         invoice.typeOfMeterInvoice = meterdata?.meter?.typeOfMeterInvoice;
+        //
 
-        // @ts-ignore
-        if(meterdata.meter?.flat?.wallet>invoice.invoiceSum){
-          meterdata.status = this.status[2]; //Status_Payed
-          invoice.status = this.status[2];
-        }else{
-          meterdata.status = this.status[3]; //Status_SendInvoice
-          invoice.status = this.status[3];
-        }
         this.invoices.push(invoice);
-        console.log("meterdata:t", meterdata);
         console.log("invoices:t", invoice);
-
-        this.meterdataService.editMeterData(meterdata.meterdataid, meterdata)
-          .subscribe(
-            response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error);
-            });
-
         this.invoiceService.createInvoice(invoice)
           .subscribe(
             response => {
@@ -344,21 +337,19 @@ export class BulkaddMeterdataComponent implements OnInit {
             error => {
               console.log(error);
             });
-        // @ts-ignore
-        meterdata.meter.flat.wallet = meterdata.meter?.flat?.wallet - invoice.invoiceSum;
-        // @ts-ignore
-        this.flatService.editFlat(meterdata.meter?.flat?.flatid, meterdata.meter?.flat)
-          .subscribe(
-            response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error);
-            });
+        // this.meterdataService.editMeterData(meterdata.meterdataid, meterdata)
+        //   .subscribe(
+        //     response => {
+        //       console.log(response);
+        //     },
+        //     error => {
+        //       console.log(error);
+        //     });
       }
 
     })
   }
+
 
   findsum() {
     this.total = 0;
@@ -398,10 +389,10 @@ export class BulkaddMeterdataComponent implements OnInit {
     // return response;
   }
   resetValues() {
-    this.selectedBuilding = undefined;
+    this.selectedBuilding = [];
     this.selectedSupplier = undefined;
     this.hasEntrances = false;
-    this.selectedInvoice = undefined;
+    this.selectedInvoice = new Invoice();
   }
 
   backClicked() {

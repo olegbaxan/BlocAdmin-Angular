@@ -20,11 +20,16 @@ export class InvoiceService {
     console.log("InvoiceService = ",invoice)
     return  this.http.post(this.baseUrl,invoice);
   }
-  editInvoice(id:number, invoice:Object){
+  editInvoice(id:any, invoice:Object){
+    console.log("InvoiceService - Modify",invoice);
     return  this.http.put(this.baseUrl,invoice);
+  }
+  deleteInvoice(id:Number|undefined){
+    return  this.http.delete(`${this.baseUrl}/${id}`);
   }
 
   getAll(params: any): Observable<any> {
+
     return this.http.get<any>(this.baseUrl, { params });
   }
 
@@ -33,6 +38,10 @@ export class InvoiceService {
   }
   getBuildings(): Observable<any> {
     return this.http.get(`${this.baseUrl}/buildings`);
+  }
+  getMetersByBuildingId(id: Number|undefined): Observable<any> {
+    return this.http.get(`${this.baseUrl}/meters/${id}`);
+
   }
   getMeters(): Observable<any> {
     return this.http.get(`${this.baseUrl}/meters`);
@@ -47,13 +56,23 @@ export class InvoiceService {
     return this.http.get(`${this.baseUrl}/typeofmeterandinvoice`);
   }
 
-  getFilesById(id: number): Observable<any> {
+  getFilesById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/file/${id}`);
   }
   getInvoicesByPersonId(id: undefined): Observable<any> {
     return this.http.get(`${this.baseUrl}/personinvoices/${id}`);
   }
-  getInvoicesBySuppliers(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/supplierinvoices`);
+  getInvoicesBySuppliers(id: undefined): Observable<any> {
+    return this.http.get(`${this.baseUrl}/supplierinvoices/${id}`);
+  }
+  getNewInvoicesSuppliers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/newsupplierinvoices`);
+  }
+  getNewInvoicesPerson(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/newpersoninvoices`);
+  }
+  checkInvoice(invoiceNo: String|undefined ): Observable<any> {
+    return this.http.get(`${this.baseUrl}/invoiceno/${invoiceNo}`);
+
   }
 }

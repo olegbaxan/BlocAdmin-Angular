@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 
 import {FlatService} from "../../../services/flat.service";
 import {PersonService} from "../../../services/person.service";
-import {BuildingService} from "../../../services/building.service";
 import {MeterService} from "../../../services/meter.service";
 import {Meter} from "../../../model/Meter";
 import {SupplierService} from "../../../services/supplier.service";
@@ -13,6 +12,8 @@ import {Flat} from "../../../model/Flat";
 import {Person} from "../../../model/Person";
 import {Supplier} from "../../../model/Supplier";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-meter',
@@ -21,19 +22,19 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 })
 export class AddMeterComponent implements OnInit {
 
-  meter: Meter = {
+  form: Meter = {
     meterId: undefined,
-    meterDest: undefined,
+    meterDest: new MeterDest(),
     serial: undefined,
     initialValue: undefined,
-    typeOfMeterInvoice: undefined,
-    person: undefined,
-    supplier: undefined,
-    flat: undefined,
-    building:undefined,
+    typeOfMeterInvoice:new TypeOfMeterInvoice(),
+    person: new Person(),
+    supplier: new Supplier(),
+    flat: new Flat(),
+    building:new Building(),
   };
 
-  submitted = false;
+  isSuccessful = false;
   persons: any = [];
   flats: any = [];
   suppliers: any = [];
@@ -41,17 +42,20 @@ export class AddMeterComponent implements OnInit {
   selectedSuppliers: Supplier |undefined;
   selectedFlats: Flat|undefined;
   meterType: any = [];
-  selectedMeterDest: MeterDest|undefined;
+  selectedMeterDest=new MeterDest();
   typeOfMeterInvoice: any = [];
   selectedTypeOfMeterInvoice: TypeOfMeterInvoice|undefined;
   buildings:Building[] = [];
   selectedBuilding:Building|undefined;
+  serialExist = false;
 
   constructor(private meterService: MeterService,
               private flatService: FlatService,
               private personService: PersonService,
               private supplierService: SupplierService,
-              public tokenStorageService:TokenStorageService,)
+              private _location: Location,
+              public tokenStorageService:TokenStorageService,
+              private router:Router)
   {
     this.tokenStorageService.getPersonData();
   }
@@ -79,6 +83,7 @@ export class AddMeterComponent implements OnInit {
               }
             }
           }
+          console.log("Person",this.persons)
         },
         error => {
           console.log(error);
@@ -108,7 +113,7 @@ export class AddMeterComponent implements OnInit {
   getFlatsByBuildingid(): void {
     this.flats=[];
     this.selectedFlats=undefined;
-    this.meter.typeOfMeterInvoice=undefined;
+    this.form.typeOfMeterInvoice=undefined;
     console.log("BuildingFlat",this.selectedBuilding?.buildingid)
     this.meterService.getBuildingFlats(this.selectedBuilding?.buildingid)
       .subscribe(
@@ -165,12 +170,13 @@ export class AddMeterComponent implements OnInit {
       .subscribe(
         response => {
           this.typeOfMeterInvoice=[];
-          // for (let i in response){
-          //   //to exclude posibility to add meters to person
-          //   if(response[i].name!='TYPE_PERSON'){
-          //     this.typeOfMeterInvoice.push(response[i]);
-          //   }
-          // }
+          for (let i in response){
+            console.log("responce type",response[i].name);
+            //to exclude posibility to add meters to person
+            if(!response[i].name.localeCompare("TYPE_PERSON")){
+              this.typeOfMeterInvoice.push(response[i]);
+            }
+          }
           this.typeOfMeterInvoice=response;
           console.log("Type",this.typeOfMeterInvoice);
 
@@ -204,10 +210,10 @@ export class AddMeterComponent implements OnInit {
 
   saveMeter(): void {
     const data = {
-      serial: this.meter.serial,
-      meterDest: this.meter.meterDest,
-      initialValue: this.meter.initialValue,
-      typeOfMeterInvoice: this.meter.typeOfMeterInvoice,
+      serial: this.form.serial,
+      meterDest: this.selectedMeterDest,
+      initialValue: this.form.initialValue,
+      typeOfMeterInvoice: this.selectedTypeOfMeterInvoice,
       person: this.selectedPerson,
       supplier: this.selectedSuppliers,
       flat: this.selectedFlats,
@@ -218,32 +224,54 @@ export class AddMeterComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.submitted = true;
+          this.isSuccessful = true;
+          this.router.navigate(['/meters']);
         },
         error => {
           console.log(error);
         });
   }
-
-  newMeter(): void {
-    this.submitted = false;
-
-    this.meter = {
-      meterId: undefined,
-      meterDest: undefined,
-      serial: undefined,
-      initialValue: undefined,
-      typeOfMeterInvoice: undefined,
-      person: undefined,
-      supplier: undefined,
-      flat: undefined,
-      building:undefined,
-    };
+  checkSerial(serial: String | undefined): void {
+    console.log("Serial",serial)
+    if (serial)  {
+      this.meterService.checkSerial(serial)
+        .subscribe(
+          response => {
+            this.serialExist = response;
+            console.log("Serial responce ", response)
+          },
+          error => {
+            console.log(error);
+          });
+    }
   }
+
+  // newMeter(): void {
+  //   this.isSuccessful = false;
+  //
+  //   this.meter = {
+  //     meterId: undefined,
+  //     meterDest: undefined,
+  //     serial: undefined,
+  //     initialValue: undefined,
+  //     typeOfMeterInvoice: undefined,
+  //     person: undefined,
+  //     supplier: undefined,
+  //     flat: undefined,
+  //     building:undefined,
+  //   };
+  // }
 
   setTypeOfMeterInvoice() {
     this.selectedFlats=undefined;
     this.selectedPerson=undefined;
 
+  }
+  backClicked() {
+    this._location.back();
+  }
+
+  selectTypeOfMeterInvoice($event:TypeOfMeterInvoice) {
+    this.selectedTypeOfMeterInvoice=$event;
   }
 }

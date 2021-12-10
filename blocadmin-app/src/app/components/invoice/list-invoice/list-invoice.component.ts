@@ -9,6 +9,7 @@ import {InvoiceService} from "../../../services/invoice.service";
 import {Observable} from "rxjs";
 import {FileUploadService} from "../../../services/file-upload.service";
 import * as FileSaver from "file-saver";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-list-invoice',
@@ -28,9 +29,11 @@ export class ListInvoiceComponent implements OnInit {
   count = parameters.count;
   pageSize = parameters.pageSize;
   pageSizes = parameters.pageSizes;
+  isEditable = true;
 
   constructor(private invoiceService: InvoiceService,
               private fileUploadService: FileUploadService,
+              private authService: AuthService,
               private route: ActivatedRoute,
               private router: Router,
               public tokenStorageService:TokenStorageService,)
@@ -76,13 +79,17 @@ export class ListInvoiceComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
 
   getInvoiceFileInfo(): void {
     for (let item in this.invoices) {
-      console.log("For Invoice", this.invoices[item])
-      if (this.invoices[item].invoiceFileId != "" || this.invoices[item].invoiceFileId != null) {
+      if(this.invoices[item].status?.name=='STATUS_CLOSED'){
+        this.isEditable=false;
+      }
+      console.log("For Invoice", this.invoices[item].invoiceFileId)
+      if (this.invoices[item].invoiceFileId) {
         console.log("FileID=",this.invoices[item].invoiceFileId)
         this.invoiceService.getFilesById(this.invoices[item].invoiceFileId)
           .subscribe(
@@ -100,6 +107,19 @@ export class ListInvoiceComponent implements OnInit {
 
     console.log("For Invoice full", this.invoices);
 
+  }
+  deleteInvoice(id:Number|undefined){
+    // this.showModal = false;
+    this.invoiceService.deleteInvoice(id)
+      .subscribe(
+        response => {
+          this.retrieveInvoices();
+          console.log("Invoice delete");
+        },
+        error => {
+          console.log(error);
+          // this.showModalBad=true;
+        });
   }
 
   handlePageChange(event: number): void {

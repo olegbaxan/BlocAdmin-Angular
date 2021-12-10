@@ -7,4 +7,6 @@ export class Payments{
   sum?: Number;
   flat?: Flat;
   person?: Person;
+  title?:String;
+  published?:String;
 }

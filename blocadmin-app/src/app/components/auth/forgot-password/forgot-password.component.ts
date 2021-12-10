@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
 import {PasswordService} from "../../../services/password.service";
 import {EmailValidator} from "@angular/forms";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,20 +10,30 @@ import {EmailValidator} from "@angular/forms";
   styleUrls: ['./forgot-password.component.css']
 })
 export class ForgotPasswordComponent implements OnInit {
-  email: EmailValidator | undefined;
+  form: any = {
+    email: null,
+  };
 
-  constructor(private passwordService: PasswordService,) {
+  email: EmailValidator | undefined;
+  isLoggedIn = false;
+  roles: string[] = [];
+  constructor(private passwordService: PasswordService,
+              private tokenStorage: TokenStorageService,) {
   }
 
   ngOnInit(): void {
-    console.log("Initiate forgot pass");
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
+      this.roles = this.tokenStorage.getPerson().roles;
+    }
   }
 
   public sendEmail(email:any): void {
-    console.log("email",email)
+    window.close();
     this.passwordService.sendEmail(email)
       .subscribe(
         response => {
+
           console.log("Responce", response)
         },
         error => {

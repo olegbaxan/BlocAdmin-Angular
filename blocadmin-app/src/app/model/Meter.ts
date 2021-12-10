@@ -16,4 +16,6 @@ export class Meter {
   flat?: Flat;
   person?: Person;
   building?:Building;
+  title?:String;
+  published?:String;
 }

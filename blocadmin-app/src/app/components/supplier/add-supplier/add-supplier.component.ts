@@ -6,6 +6,9 @@ import {any} from "codelyzer/util/function";
 import {SupplierService} from "../../../services/supplier.service";
 import {AddressService} from "../../../services/address.service";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Building} from "../../../model/Building";
+import {Router} from "@angular/router";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-add-supplier',
@@ -13,23 +16,26 @@ import {TokenStorageService} from "../../../services/token-storage.service";
   styleUrls: ['./add-supplier.component.css']
 })
 export class AddSupplierComponent implements OnInit {
-  supplier: Supplier = {
+  form: Supplier = {
     supplierid: undefined,
     supplierName: '',
     fiscalCode: '',
     bankCode: '',
     details: '' ,
-    IBAN: '',
-    address:undefined,
+    iban: '',
+    address: new Address(),
   };
 
   submitted = false;
   addresses:any = [];
   selectedAddress:any=[];
+  isSuccessful = false;
 
   constructor(private supplierService: SupplierService,
               private addressService: AddressService,
-              public tokenStorageService:TokenStorageService,)
+              public tokenStorageService:TokenStorageService,
+              private router:Router,
+              private _location: Location,)
   {
     this.tokenStorageService.getPersonData();
   }
@@ -55,11 +61,11 @@ export class AddSupplierComponent implements OnInit {
   saveSupplier(): void {
     console.log("this.selectedAddress",this.selectedAddress);
     const data = {
-      supplierName: this.supplier.supplierName,
-      fiscalCode: this.supplier.fiscalCode,
-      bankCode: this.supplier.bankCode,
-      IBAN: this.supplier.IBAN,
-      details: this.supplier.details,
+      supplierName: this.form.supplierName,
+      fiscalCode: this.form.fiscalCode,
+      bankCode: this.form.bankCode,
+      iban: this.form.iban,
+      details: this.form.details,
       address: this.selectedAddress,
     };
 
@@ -67,24 +73,28 @@ export class AddSupplierComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.submitted = true;
+          this.isSuccessful = true
+          this.router.navigate(['/suppliers']);
         },
         error => {
           console.log(error);
         });
   }
-  newSupplier(): void {
-    this.submitted = false;
-
-    this.supplier = {
-      supplierid: undefined,
-      supplierName: '',
-      bankCode: '',
-      fiscalCode: '',
-      IBAN: '',
-      details: '',
-      address:undefined,
-    };
+  // newSupplier(): void {
+  //   this.submitted = false;
+  //
+  //   this.form = {
+  //     supplierid: undefined,
+  //     supplierName: '',
+  //     bankCode: '',
+  //     fiscalCode: '',
+  //     iban: '',
+  //     details: '',
+  //     address:undefined,
+  //   };
+  // }
+  backClicked() {
+    this._location.back();
   }
 
 }

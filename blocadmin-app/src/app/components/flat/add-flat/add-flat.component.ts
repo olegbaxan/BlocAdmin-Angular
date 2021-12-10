@@ -9,6 +9,8 @@ import {MeterService} from "../../../services/meter.service";
 import {Meter} from "../../../model/Meter";
 import {Person} from "../../../model/Person";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-flat',
@@ -33,17 +35,22 @@ export class AddFlatComponent implements OnInit {
   persons: Person[] = [];
   buildings: Building[] = [];
   meters: Meter[] = [];
-  selectedPerson: Person | undefined;
+  selectedPerson = new Person();
   selectedMeters: Meter[] = [];
-  selectedBuilding: Building | undefined;
+  selectedBuilding=new Building();
   flatError: boolean = false;
   floorError: boolean = false;
+  availableFlats:number[]=[];
+  isSuccessful=false;
+  entranceExist=true;
 
   constructor(private flatService: FlatService,
               private personService: PersonService,
               private buildingService: BuildingService,
               private meterService: MeterService,
-              public tokenStorageService: TokenStorageService,) {
+              public tokenStorageService: TokenStorageService,
+              private _location: Location,
+              private router:Router) {
     this.tokenStorageService.getPersonData();
   }
 
@@ -59,16 +66,9 @@ export class AddFlatComponent implements OnInit {
         response => {
           this.persons = [];
           for (let item in response) {
-            // console.log("response roles ",response[item].roles)
-
-            for (var i in response[item].roles) {
-              if (response[item].roles[i].name === "ROLE_USER") {
-                response[item].bindName = response[item].name + " " + response[item].surname;
-                this.persons.push(response[item]);
-              }
-            }
+            response[item].bindName = response[item].name + " " + response[item].surname;
+            this.persons.push(response[item]);
           }
-          console.log("Persons ", this.persons)
         },
         error => {
           console.log(error);
@@ -91,17 +91,39 @@ export class AddFlatComponent implements OnInit {
         });
     // return response;
   }
+  getAvailableFlatsByBuilding(): void {
+    let buildingId=this.selectedBuilding?.buildingid;
+    console.log("Select Building",this.selectedBuilding);
+    if(!this.selectedBuilding.address?.entranceNo){
+      this.entranceExist=false;
+      this.flat.entrance=this.selectedBuilding.address?.entranceNo;
+      console.log("Entrance exist",this.entranceExist);
+    }
+
+    this.flatService.getAvailableFlatsByBuildingId(buildingId)
+      .subscribe(
+        response => {
+          this.availableFlats = [];
+          this.availableFlats=response;
+          // console.log("Available",this.availableFlats);
+        },
+        error => {
+          console.log(error);
+        });
+    // return response;
+  }
 
   private getAllBuildings(): void {
     this.flatService.getBuildings()
       .subscribe(
         response => {
           this.buildings = [];
+          console.log("Building response",response);
           for (let item in response) {
-            if (!response[item].entranceNo) {
-              response[item].bindName = response[item].city + " " + response[item].raion + " " + response[item].street + " " + response[item].houseNumber
+            if (!response[item].address.entranceNo) {
+              response[item].bindName = response[item].address.city + " " + response[item].address.raion + " " + response[item].address.street + " " + response[item].address.houseNumber
             } else {
-              response[item].bindName = response[item].city + " " + response[item].raion + " " + response[item].street + " " + response[item].houseNumber + "/" + response[item].entranceNo;
+              response[item].bindName = response[item].address.city + " " + response[item].address.raion + " " + response[item].address.street + " " + response[item].address.houseNumber + "/" + response[item].address.entranceNo;
             }
             this.buildings.push(response[item]);
 
@@ -115,6 +137,7 @@ export class AddFlatComponent implements OnInit {
   }
 
   saveFlat(): void {
+    console.log("Flatfloor",this.flat.floor);
     const data = {
       flatNumber: this.flat.flatNumber,
       floor: this.flat.floor,
@@ -130,7 +153,8 @@ export class AddFlatComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.submitted = true;
+          this.isSuccessful = true
+          this.router.navigate(['/flats']);
         },
         error => {
           console.log(error);
@@ -139,8 +163,8 @@ export class AddFlatComponent implements OnInit {
 
   newFlat(): void {
     this.submitted = false;
-    this.selectedBuilding = undefined;
-    this.selectedPerson = undefined;
+    this.selectedBuilding ;
+    this.selectedPerson ;
     this.flat = {
       flatid: undefined,
       flatNumber: undefined,
@@ -154,9 +178,6 @@ export class AddFlatComponent implements OnInit {
     };
   }
 
-  select() {
-    console.log("Selected Building", this.selectedBuilding)
-  }
 
   chooseFlatNumber($event: any) {
     // @ts-ignore
@@ -172,5 +193,8 @@ export class AddFlatComponent implements OnInit {
       this.floorError = true;
     } else this.floorError = false;
 
+  }
+  backClicked() {
+    this._location.back();
   }
 }

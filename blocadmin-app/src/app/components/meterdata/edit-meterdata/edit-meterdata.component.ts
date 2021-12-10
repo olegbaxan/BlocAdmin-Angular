@@ -3,6 +3,8 @@ import {MeterService} from "../../../services/meter.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MeterdataService} from "../../../services/meterdata.service";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Meter} from "../../../model/Meter";
 
 @Component({
   selector: 'app-edit-meterdata',
@@ -14,14 +16,18 @@ export class EditMeterdataComponent implements OnInit {
   title="Edit meter form";
   meterdata:any;
   message = '';
-  meters: any = [];
-  selectedMeter: any ;
+  meters: Meter[] = [];
+  selectedMeter=new Meter() ;
   status: string []= [];
   selectedStatus: any ;
+  isSuccessful = false;
+  difference=false;
+
   constructor(private meterdataService: MeterdataService,
               private meterService: MeterService,
               private route: ActivatedRoute,
               private router: Router,
+              private _location: Location,
               public tokenStorageService:TokenStorageService,)
   {
     this.tokenStorageService.getPersonData();
@@ -40,7 +46,7 @@ export class EditMeterdataComponent implements OnInit {
         response => {
           this.meters=[];
           for (let item in response) {
-            response[item].bindName = response[item].serial + " " + response[item].flat.flatNumber;
+            response[item].bindName = response[item].serial;
             this.meters.push(response[item]);
 
           }
@@ -70,8 +76,10 @@ export class EditMeterdataComponent implements OnInit {
       .subscribe(
         data => {
           this.meterdata = data;
-          this.selectedMeter=data.meters;
+          this.selectedMeter=data.meter;
           this.selectedStatus=data.status.name;
+          console.log("MeterData",this.meterdata)
+          console.log("selectedMeter",this.selectedMeter)
         },
         error => {
           console.log(error);
@@ -108,5 +116,12 @@ export class EditMeterdataComponent implements OnInit {
           console.log(error);
         });
   }
-
+  backClicked() {
+    this._location.back();
+  }
+  enterCurrentValue(event: any) {
+    if (event.target.value <= this.meterdata!.previousValue) {
+      this.difference = true;
+    }
+  }
 }

@@ -3,6 +3,8 @@ import {PersonService} from "../../../services/person.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SupplierService} from "../../../services/supplier.service";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Supplier} from "../../../model/Supplier";
 
 @Component({
   selector: 'app-edit-supplier',
@@ -11,14 +13,17 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 })
 export class EditSupplierComponent implements OnInit {
   title="Edit supplier form";
-  supplier:any;
+  supplier=new Supplier();
   message = '';
   addresses:any = [];
   selectedAddress:any=[];
+  isSuccessful = false;
+
   constructor(private supplierService: SupplierService,
               private route: ActivatedRoute,
               private router: Router,
-              public tokenStorageService:TokenStorageService,)
+              public tokenStorageService:TokenStorageService,
+              private _location: Location,)
   {
     this.tokenStorageService.getPersonData();
   }
@@ -71,7 +76,7 @@ export class EditSupplierComponent implements OnInit {
     this.supplierService.editSupplier(this.supplier.supplierid, this.supplier)
       .subscribe(
         response => {
-          // console.log(response);
+          this.isSuccessful = true
           this.message = 'The building was updated successfully!';
         },
         error => {
@@ -89,7 +94,7 @@ export class EditSupplierComponent implements OnInit {
       published: status
     };
 
-    this.supplierService.editSupplier(this.supplier.id, data)
+    this.supplierService.editSupplier(this.supplier.supplierid, data)
       .subscribe(
         response => {
           this.supplier.published = status;
@@ -98,5 +103,8 @@ export class EditSupplierComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+  backClicked() {
+    this._location.back();
   }
 }

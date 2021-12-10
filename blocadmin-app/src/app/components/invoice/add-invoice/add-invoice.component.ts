@@ -9,6 +9,10 @@ import {Meter} from "../../../model/Meter";
 import {TypeOfMeterInvoice} from "../../../model/TypeOfMeterInvoice";
 import {Building} from "../../../model/Building";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Router} from "@angular/router";
+import {MeterService} from "../../../services/meter.service";
+import {MeterdataService} from "../../../services/meterdata.service";
 
 
 @Component({
@@ -18,7 +22,7 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 })
 export class AddInvoiceComponent implements OnInit {
 
-  invoice: Invoice = {
+  form: Invoice = {
     invoiceId: undefined,
     invoiceNumber: undefined,
     meterDataCurrent: undefined,
@@ -37,10 +41,11 @@ export class AddInvoiceComponent implements OnInit {
     hasMeter:true,
   };
 
-  submitted = false;
+  isSuccessful = false;
   suppliers: Array<Supplier>= [];
   buildings: Array<Building>= [];
   meters: Array<Meter>= [];
+  buildMeters:Array<Meter>=[];
   typeOfMeterInvoices: Array<TypeOfMeterInvoice> = [];
   hasMeter:boolean=true;
 
@@ -49,14 +54,20 @@ export class AddInvoiceComponent implements OnInit {
   progressInfos: any[] = [];
   message: string[] = [];
   fileId:string='';
+  fileExist:boolean=false;
+  fileIdName:string='';
 
   previews: string[] = [];
   imageInfos?: Observable<any>;
+  invoiceExist=false;
 
 
   constructor(private invoiceService: InvoiceService,
               private uploadService: FileUploadService,
-              public tokenStorageService:TokenStorageService,)
+              public tokenStorageService:TokenStorageService,
+              private _location: Location,
+              private meterdataService:MeterdataService,
+              private router:Router)
   {
     this.tokenStorageService.getPersonData();
   }
@@ -137,58 +148,84 @@ export class AddInvoiceComponent implements OnInit {
         });
     // return response;
   }
+  getAllBuildingMeters(buildings:Building[]|undefined) {
+    console.log("Selected Buildings", buildings);
+    if (buildings!=null){
+      for (let i=0;i<buildings?.length;i++){
+        this.buildMeters=[];
+        this.getBuildMeters(buildings[i]);
+      }
+    }
+
+  }
+  private getBuildMeters(building:Building): any {
+    this.invoiceService.getMetersByBuildingId(building.buildingid)
+      .subscribe(
+        response => {
+
+          for (let item in response){
+            response[item].bindName = response[item].serial;
+            this.buildMeters.push(response[item]);
+          }
+          console.log("this.buildMeters",this.buildMeters);
+        },
+        error => {
+          console.log(error);
+        });
+    // return response;
+  }
+
 
   saveInvoice(): void {
-    if (!this.invoice.buildings){
+    if (!this.form.buildings){
       // @ts-ignore
-      this.invoice.buildings.push(this.invoice?.meter?.building);
+      this.form.buildings.push(this.form?.meter?.building);
+      console.log("ThisfileId",this.fileId);
     }
     const data = {
-      invoiceNumber: this.invoice.invoiceNumber,
-      meterDataCurrent: this.invoice.meterDataCurrent,
-      meterDataPrevious: this.invoice.meterDataPrevious,
-      invoiceSum: this.invoice.invoiceSum,
-      unitPrice: this.invoice.unitPrice,
-      payTill: this.invoice.payTill,
-      emittedDate: this.invoice.emittedDate,
-      dateOfPay: this.invoice.dateOfPay,
-      typeOfMeterInvoice: this.invoice.typeOfMeterInvoice,
-      supplier: this.invoice.supplier,
-      buildings: this.invoice.buildings,
-      meter: this.invoice.meter,
+      invoiceNumber: this.form.invoiceNumber,
+      meterDataCurrent: this.form.meterDataCurrent,
+      meterDataPrevious: this.form.meterDataPrevious,
+      invoiceSum: this.form.invoiceSum,
+      unitPrice: this.form.unitPrice,
+      payTill: this.form.payTill,
+      emittedDate: this.form.emittedDate,
+      dateOfPay: this.form.dateOfPay,
+      typeOfMeterInvoice: this.form.typeOfMeterInvoice,
+      supplier: this.form.supplier,
+      buildings: this.form.buildings,
+      meter: this.form.meter,
       invoiceFileId:this.fileId,
     };
-    console.log("SaveInvoice",data);
+    console.log("Invoice Data",data)
     this.invoiceService.createInvoice(data)
       .subscribe(
         response => {
           console.log(response);
-          this.submitted = true;
+          this.isSuccessful = true;
+          this.router.navigate(['/invoices']);
         },
         error => {
           console.log(error);
         });
   }
+  getPreviousValue(meter:Meter|undefined) {
+    // this.meters?.forEach((meter) => {
+      console.log("MeterGet", meter?.meterId);
+      this.meterdataService.getPreviuosMeterData(meter?.meterId)
+        .subscribe(
+          response => {
+            if (response == null) {
+              this.form.meterDataPrevious = meter?.initialValue;
+            } else {
+              this.form.meterDataPrevious = response;
+            }
 
-  newInvoice(): void {
-    this.submitted = false;
-
-    this.invoice = {
-      invoiceId: undefined,
-      invoiceNumber: undefined,
-      meterDataCurrent: undefined,
-      meterDataPrevious: undefined,
-      invoiceSum: undefined,
-      unitPrice: undefined,
-      payTill: undefined,
-      emittedDate: undefined,
-      dateOfPay: undefined,
-      typeOfMeterInvoice: undefined,
-      supplier: undefined,
-      meter: undefined,
-      status:undefined,
-      hasMeter:true,
-    };
+            console.log("PrevValue", this.form.meterDataPrevious)
+          },
+          error => {
+            console.log(error);
+          });
   }
 
   //File upload and view methods
@@ -196,7 +233,8 @@ export class AddInvoiceComponent implements OnInit {
     this.message = [];
     this.progressInfos = [];
     this.selectedFiles = event.target.files;
-
+    console.log("SelectedFiles",this.selectedFiles);
+    // this.fileIdName = event.target.files.FileList.File.name;
     this.previews = [];
     if (this.selectedFiles && this.selectedFiles[0]) {
       const numberOfFiles = this.selectedFiles.length;
@@ -208,6 +246,8 @@ export class AddInvoiceComponent implements OnInit {
           this.previews.push(e.target.result);
         };
 
+        // console.log("SelectedFiles",this.fileIdName);
+        // this.checkExistingFileName(this.selectedFiles[i].name);
         reader.readAsDataURL(this.selectedFiles[i]);
       }
     }
@@ -227,7 +267,7 @@ export class AddInvoiceComponent implements OnInit {
     if (file) {
       this.uploadService.upload(file).subscribe(
         (event: any) => {
-
+          console.log("Upload response",event);
           if (event.type === HttpEventType.UploadProgress) {
             this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
           } else if (event instanceof HttpResponse) {
@@ -258,9 +298,27 @@ export class AddInvoiceComponent implements OnInit {
 }
 
   changeMeter() {
-    this.invoice.buildings=[];
-    this.invoice.meter=undefined;
-    this.invoice.meterDataCurrent=undefined;
-
+    this.form.buildings=[];
+    this.form.meter=undefined;
+    this.form.meterDataCurrent=undefined;
   }
+  backClicked() {
+    this._location.back();
+  }
+
+
+  checkInvoiceNo(invoiceNumber: String|undefined) {
+      console.log("InvoiceNo",invoiceNumber)
+      if (invoiceNumber)  {
+        this.invoiceService.checkInvoice(invoiceNumber)
+          .subscribe(
+            response => {
+              this.invoiceExist = response;
+              console.log("Invoice responce ", response)
+            },
+            error => {
+              console.log(error);
+            });
+      }
+    }
 }

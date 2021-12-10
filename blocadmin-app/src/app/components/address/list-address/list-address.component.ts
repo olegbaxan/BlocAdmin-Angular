@@ -4,6 +4,8 @@ import {AddressService} from "../../../services/address.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Address} from "../../../model/Address";
 import {parameters} from "../../../constants/constants";
+import {AuthService} from "../../../services/auth.service";
+import {TokenStorageService} from "../../../services/token-storage.service";
 
 
 
@@ -35,9 +37,12 @@ export class ListAddressComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
-    // private loginComponent: LoginComponent,
+    private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router,) {};
+    private router: Router,
+    public tokenStorageService:TokenStorageService,) {
+    this.tokenStorageService.getPersonData();
+  };
 
   ngOnInit(): void {
     this.retrieveAddresses();
@@ -76,6 +81,7 @@ export class ListAddressComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
 

@@ -12,6 +12,7 @@ import {MeterDest} from "../../../model/MeterDest";
 import {TypeOfMeterInvoice} from "../../../model/TypeOfMeterInvoice";
 import {Building} from "../../../model/Building";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-edit-meter',
@@ -26,15 +27,17 @@ export class EditMeterComponent implements OnInit {
   persons: Person[] = [];
   flats: Flat[] = [];
   suppliers: Supplier[] = [];
-  selectedPerson: Person | undefined;
-  selectedSuppliers: Supplier | undefined;
+  selectedPerson = new Person();
+  selectedSuppliers = new Supplier();
   selectedFlats: Flat = new Flat();
   meterDest: MeterDest[] = [];
-  selectedMeterDest: MeterDest | undefined;
+  selectedMeterDest = new MeterDest();
   typeOfMeterInvoice: TypeOfMeterInvoice[] = [];
-  selectedTypeOfMeterInvoice: TypeOfMeterInvoice | undefined;
+  selectedTypeOfMeterInvoice = new TypeOfMeterInvoice();
   buildings: Building[] = [];
-  selectedBuilding: Building | undefined;
+  selectedBuilding = new Building();
+  isSuccessful = false;
+  serialExist = false;
 
   constructor(private meterService: MeterService,
               private flatService: FlatService,
@@ -43,8 +46,8 @@ export class EditMeterComponent implements OnInit {
               private buildingService: BuildingService,
               private route: ActivatedRoute,
               private router: Router,
-              public tokenStorageService:TokenStorageService,)
-  {
+              public tokenStorageService: TokenStorageService,
+              private _location: Location,) {
     this.tokenStorageService.getPersonData();
   }
 
@@ -64,7 +67,7 @@ export class EditMeterComponent implements OnInit {
     this.flatService.getPersons()
       .subscribe(
         response => {
-          this.persons=[];
+          this.persons = [];
           for (let item in response) {
             response[item].bindName = response[item].name + " " + response[item].surname;
             this.persons.push(response[item]);
@@ -81,7 +84,7 @@ export class EditMeterComponent implements OnInit {
     this.meterService.getFlats()
       .subscribe(
         response => {
-          this.flats=[];
+          this.flats = [];
           for (let item in response) {
             response[item].bindName = response[item].flatNumber;
             this.flats.push(response[item]);
@@ -98,7 +101,7 @@ export class EditMeterComponent implements OnInit {
     this.meterService.getSuppliers()
       .subscribe(
         response => {
-          this.suppliers=[];
+          this.suppliers = [];
           for (let item in response) {
             // response[item].bindName = response[item].supplierName;
             this.suppliers.push(response[item]);
@@ -115,7 +118,7 @@ export class EditMeterComponent implements OnInit {
     this.meterService.getMeterType()
       .subscribe(
         response => {
-          this.meterDest=[];
+          this.meterDest = [];
           this.meterDest = response;
         },
         error => {
@@ -128,7 +131,7 @@ export class EditMeterComponent implements OnInit {
     this.meterService.getTypeOfMeterInvoice()
       .subscribe(
         response => {
-          this.typeOfMeterInvoice=[];
+          this.typeOfMeterInvoice = [];
           this.typeOfMeterInvoice = response;
         },
         error => {
@@ -187,8 +190,7 @@ export class EditMeterComponent implements OnInit {
           this.selectedFlats = data.flat;
           this.selectedBuilding = data.building;
           this.selectedMeterDest = data.meterDest;
-          this.selectedTypeOfMeterInvoice = data.typeOfMeterAndInvoice;
-          console.log("Building",this.selectedBuilding);
+          this.selectedTypeOfMeterInvoice = data.typeOfMeterInvoice;
         },
         error => {
           console.log(error);
@@ -201,10 +203,12 @@ export class EditMeterComponent implements OnInit {
     this.meter.flat = this.selectedFlats;
     this.meter.building = this.selectedBuilding;
     this.meter.meterDest = this.selectedMeterDest;
-    this.meter.typeOfMeterAndInvoice = this.selectedTypeOfMeterInvoice;
+    this.meter.typeOfMeterInvoice = this.selectedTypeOfMeterInvoice;
+    console.log("DataMeter",this.meter);
     this.meterService.editMeter(this.meter.meterid, this.meter)
       .subscribe(
         response => {
+          this.isSuccessful = true
           this.message = 'The meter was updated successfully!';
         },
         error => {
@@ -232,6 +236,24 @@ export class EditMeterComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+
+  backClicked() {
+    this._location.back();
+  }
+
+  checkSerial(serial: String | undefined): void {
+    if ((serial) && (serial?.length > 3)) {
+      this.meterService.checkSerial(serial)
+        .subscribe(
+          response => {
+            this.serialExist = response;
+            console.log("Serial responce ", response)
+          },
+          error => {
+            console.log(error);
+          });
+    }
   }
 
 }

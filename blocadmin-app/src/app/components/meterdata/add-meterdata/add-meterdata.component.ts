@@ -5,6 +5,8 @@ import {MeterdataService} from "../../../services/meterdata.service";
 import {Meter} from "../../../model/Meter";
 import {Status} from "../../../model/Status";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-meterdata',
@@ -13,14 +15,14 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 })
 export class AddMeterdataComponent implements OnInit {
 
-  meterdata: MeterData = {
+  form: MeterData = {
     meterdataid: undefined,
     currentValue: undefined,
     previousValue:undefined,
     meter: undefined,
     status:undefined,
   };
-
+  isSuccessful = false;
   difference=false;
   submitted = false;
   meters: Meter[] = [];
@@ -30,10 +32,12 @@ export class AddMeterdataComponent implements OnInit {
 
   constructor(private meterdataService: MeterdataService,
               private meterService: MeterService,
+              private _location: Location,
+              private router:Router,
               public tokenStorageService:TokenStorageService,)
   {
     this.tokenStorageService.getPersonData();
-    this.meterdata.previousValue=0;
+    this.form.previousValue=0;
   }
 
   ngOnInit(): void {
@@ -76,14 +80,14 @@ export class AddMeterdataComponent implements OnInit {
   saveMeterData(): void {
     for (let status of this.status){
       if(status.name=="STATUS_NEW"){
-        this.meterdata.status=status;
+        this.form.status=status;
       }
     }
     const data = {
-      previousValue: this.meterdata.previousValue,
-      currentValue: this.meterdata.currentValue,
+      previousValue: this.form.previousValue,
+      currentValue: this.form.currentValue,
       meter: this.selectedMeter,
-      status: this.meterdata.status,
+      status: this.form.status,
 
     };
     console.log("MeterDataCR",data);
@@ -101,7 +105,7 @@ export class AddMeterdataComponent implements OnInit {
   newMeterData(): void {
     this.submitted = false;
 
-    this.meterdata = {
+    this.form = {
       meterdataid: undefined,
       currentValue: undefined,
       previousValue: undefined,
@@ -118,9 +122,9 @@ export class AddMeterdataComponent implements OnInit {
       .subscribe(
         (response:number) => {
           if(response==null){
-            this.meterdata.previousValue=this.selectedMeter.initialValue;
+            this.form.previousValue=this.selectedMeter.initialValue;
           }else {
-            this.meterdata.previousValue=response;
+            this.form.previousValue=response;
           }
         },
         error => {
@@ -129,9 +133,12 @@ export class AddMeterdataComponent implements OnInit {
   }
 
   enterCurrentValue(event: any) {
-    if(event.target.value<=this.meterdata!.previousValue){
+    if(event.target.value<=this.form!.previousValue){
       this.difference=true;
     }
 
+  }
+  backClicked() {
+    this._location.back();
   }
 }

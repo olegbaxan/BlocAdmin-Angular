@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {Supplier} from "../../../model/Supplier";
 import {SupplierService} from "../../../services/supplier.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-list-supplier',
@@ -27,6 +28,7 @@ export class ListSupplierComponent implements OnInit {
   pageSizes = parameters.pageSizes;
 
   constructor(private supplierService: SupplierService,
+              private authService: AuthService,
               private route: ActivatedRoute,
               private router: Router,
               public tokenStorageService:TokenStorageService,)
@@ -70,6 +72,7 @@ export class ListSupplierComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
   handlePageChange(event: number): void {

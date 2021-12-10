@@ -1,3 +1,5 @@
+@import "~@ng-select/ng-select/themes/ant.design.theme.css";
+
 
 textarea {
   height: 100px;
@@ -109,7 +111,8 @@ body {
   padding-top: 10px;
 }
 
-.form_wrapper input[type=text], .form_wrapper input[type=email], .form_wrapper input[type=password] {
+.form_wrapper input[type=text], .form_wrapper input[type=email], .form_wrapper input[type=password],
+.form_wrapper input[type=number], .form_wrapper input[type=select]{
   width: 100%;
   padding: 8px 10px 9px 35px;
   height: 35px;
@@ -122,11 +125,13 @@ body {
   transition: all 0.3s ease-in-out;
 }
 
-.form_wrapper input[type=text]:hover, .form_wrapper input[type=email]:hover, .form_wrapper input[type=password]:hover {
+.form_wrapper input[type=text]:hover, .form_wrapper input[type=email]:hover, .form_wrapper input[type=password]:hover,
+.form_wrapper input[type=number]:hover, .form_wrapper input[type=select]:hover{
   background: #fafafa;
 }
 
-.form_wrapper input[type=text]:focus, .form_wrapper input[type=email]:focus, .form_wrapper input[type=password]:focus {
+.form_wrapper input[type=text]:focus, .form_wrapper input[type=email]:focus, .form_wrapper input[type=password]:focus,
+.form_wrapper input[type=number]:focus , .form_wrapper input[type=focus]{
   -webkit-box-shadow: 0 0 2px 1px rgba(255, 169, 0, 0.5);
   -moz-box-shadow: 0 0 2px 1px rgba(255, 169, 0, 0.5);
   box-shadow: 0 0 2px 1px rgba(255, 169, 0, 0.5);
@@ -150,12 +155,28 @@ body {
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
+.form_wrapper input[type=reset]{
+  background: forestgreen;
+  height: 35px;
+  line-height: 30px;
+  width: 100%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
 
-.form_wrapper input[type=submit]:hover {
+.form_wrapper input[type=submit]:hover,.form_wrapper input[type=reset]:hover {
   background: #e1a70a;
 }
 
-.form_wrapper input[type=submit]:focus {
+.form_wrapper input[type=submit]:focus,.form_wrapper input[type=reset]:focus {
   background: #e1a70a;
 }
 
@@ -309,3 +330,4 @@ body {
   }
 
 }
+

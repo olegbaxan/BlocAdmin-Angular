@@ -1,8 +1,9 @@
 <div class="form_wrapper">
   <div class="form_container">
     <div class="title_container">
-      <h2>Responsive Registration Form</h2>
+      <h2>Registration Form</h2>
     </div>
+
     <div class="row clearfix">
       <div class="">
         <form *ngIf="!isSuccessful"
@@ -22,7 +23,11 @@
               maxlength="20"
               #username="ngModel"
               autofocus
+              (ngModelChange)="checkUsername(form.username)"
             />
+          </div>
+          <div class="alert-danger" *ngIf="usernameExist">
+            <div>Username already taken</div>
           </div>
           <div class="alert-danger" *ngIf="username.errors && f.submitted">
             <div *ngIf="username.errors.required">Username is required</div>
@@ -94,6 +99,7 @@
                   minlength="3"
                   maxlength="30"
                   #name="ngModel"
+
                 />
               </div>
               <div class="alert-danger" *ngIf="name.errors && f.submitted">
@@ -115,13 +121,14 @@
                   #surname="ngModel"
                 />
               </div>
-            </div>
-            <div class="alert-danger" *ngIf="surname.errors && f.submitted">
-              <div *ngIf="surname.errors.required">Last Name is required</div>
-              <div *ngIf="surname.errors.minlength">
-                Last Name must be at least 3 characters
+              <div class="alert-danger" *ngIf="surname.errors && f.submitted">
+                <div *ngIf="surname.errors.required">Last Name is required</div>
+                <div *ngIf="surname.errors.minlength">
+                  Last Name must be at least 3 characters
+                </div>
               </div>
             </div>
+
           </div>
           <div class="row clearfix">
             <div class="col_half">
@@ -135,12 +142,16 @@
                   minlength="13"
                   maxlength="13"
                   #idnp="ngModel"
+                  (ngModelChange)="checkIDNP(form.idnp)"
                 />
+              </div>
+              <div class="alert-danger" *ngIf="idnpExist">
+                <div>IDNP already taken</div>
               </div>
               <div class="alert-danger" *ngIf="idnp.errors && f.submitted">
                 <div *ngIf="idnp.errors.required">IDNP is required</div>
                 <div *ngIf="idnp.errors.minlength">
-                  IDNP must be at least 13 characters
+                  IDNP must be 13 characters
                 </div>
               </div>
             </div>
@@ -156,13 +167,14 @@
                   #mobile="ngModel"
                 />
               </div>
-            </div>
-            <div class="alert-danger" *ngIf="mobile.errors && f.submitted">
-              <div *ngIf="mobile.errors.required">Mobile number is required</div>
-              <div *ngIf="mobile.errors.minlength">
-                Mobile must be at least 9 numbers
+              <div class="alert-danger" *ngIf="mobile.errors && f.submitted">
+                <div *ngIf="mobile.errors.required">Mobile number is required</div>
+                <div *ngIf="mobile.errors.minlength">
+                  Mobile must be at least 9 numbers
+                </div>
               </div>
             </div>
+
           </div>
           <div class="input_field"> <span><i aria-hidden="true" class="fa fa-envelope-open-text"></i></span>
             <textarea
@@ -185,7 +197,14 @@
               </div>
             </div>
           </div>
-          <input class="button" type="submit" value="Register" />
+          <div class="row">
+            <div class="col-6">
+              <input class="button" type="submit" value="Register"/>
+            </div>
+            <div class="col-6">
+              <input class="button" type="reset" value="Reset" (click)="backClicked()"/>
+            </div>
+          </div>
         </form>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Navigation, Router} from "@angular/router";
 
 const TOKEN_KEY = 'auth-token';
 const PERSON_KEY = 'auth-person';
@@ -16,8 +16,9 @@ export class TokenStorageService {
   isAdmin:boolean=false;
   isManager:boolean=false;
   constructor(private router: Router,
+              private route: ActivatedRoute,
               ) {
-    this.getPersonData()
+    // this.getPersonData()
   }
 
   signOut(): void {
@@ -58,12 +59,11 @@ export class TokenStorageService {
         switch (this.loggedUserRole[i]){
           case "ROLE_ADMIN": this.isAdmin=true ;break;
           case "ROLE_BLOCADMIN": this.isManager=true ;break;
-          default:console.log("IsUser");
         }
       }
 
     }else {
-      // this.router.navigate(['/login']);
+      this.router.navigate(['/login']);
     }
 
 }}

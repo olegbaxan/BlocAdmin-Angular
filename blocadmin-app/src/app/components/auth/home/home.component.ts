@@ -9,6 +9,7 @@ import {Parser} from "@angular/compiler";
 import {PaymentsService} from "../../../services/payments.service";
 import {Payments} from "../../../model/Payments";
 import {Location} from "@angular/common";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-home',
@@ -37,6 +38,7 @@ export class HomeComponent implements OnInit {
   constructor(private personService: PersonService,
               private invoiceService: InvoiceService,
               private paymentsService: PaymentsService,
+              private authService: AuthService,
               private router: Router,
               private _location: Location,
               public tokenStorageService:TokenStorageService,)
@@ -55,11 +57,18 @@ export class HomeComponent implements OnInit {
         this.content = JSON.parse(err.error).message;
       }
     );
+if (this.tokenStorageService.loggedUserRole=="ROLE_ADMIN"){
+  this.router.navigate(['/home/admin']);
+}
+    if (this.tokenStorageService.loggedUserRole=="ROLE_BLOCADMIN"){
+      this.router.navigate(['/home/blocadmin']);
+    }
 
     this.getPersonById(this.tokenStorageService.loggedUserID);
     this.getPersonInvoices(this.tokenStorageService.loggedUserID);
-    this.getSupplierInvoices();
+    this.getSupplierInvoices(this.tokenStorageService.loggedUserID);
     this.getPayments(this.tokenStorageService.loggedUserID);
+    // this.getMeters(this.tokenStorageService.loggedUserID);
   }
   private getPersonById(id: string | number | null):void {
     this.personService.getById(id)
@@ -70,6 +79,7 @@ export class HomeComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
   updatePerson(playlistForm: { reset: () => void; }): void {
@@ -102,12 +112,13 @@ export class HomeComponent implements OnInit {
           console.log(error);
         });
   }
-  private getSupplierInvoices() {
-    this.invoiceService.getInvoicesBySuppliers()
+  private getSupplierInvoices(loggedUserID: any) {
+    this.invoiceService.getInvoicesBySuppliers(loggedUserID)
       .subscribe(
         data => {
           this.invoicesS = data;
           console.log("Invoices SupplierData",this.invoicesS);
+          this.getInvoiceFileInfo();
         },
         error => {
           console.log(error);
@@ -123,6 +134,31 @@ export class HomeComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+  getInvoiceFileInfo(): void {
+    for (let item in this.invoicesS) {
+      // console.log("For Invoice", this.invoicesS[item])
+      // if (this.invoicesS[item].invoiceFileId != "" || this.invoicesS[item].invoiceFileId != null) {
+      if (this.invoicesS[item].invoiceFileId) {
+        console.log("FileID=",this.invoicesS[item].invoiceFileId)
+        this.invoiceService.getFilesById(this.invoicesS[item].invoiceFileId)
+          .subscribe(
+            response => {
+              const {invoiceFile, fileInfo} = response;
+              console.log("Responce",response);
+              this.invoicesS[item].invoiceFile = invoiceFile;
+              this.invoicesS[item].fileInfo = fileInfo[0];
+              console.log("InvoiceFile",invoiceFile);
+              console.log("fileInfo",fileInfo);
+            },
+            error => {
+              console.log(error);
+            });
+      }
+    }
+
+    console.log("For Invoice full", this.invoicesS);
+
   }
 
   //Bootstrap Modal Open event

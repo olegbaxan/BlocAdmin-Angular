@@ -16,6 +16,8 @@ export class EditPersonComponent implements OnInit {
   message = '';
   roles:any = [];
   selectedRoles:any=[];
+  isSuccessful = false;
+  idnpExist:boolean=false;
   constructor(private personService: PersonService,
               private route: ActivatedRoute,
               private router: Router,
@@ -58,6 +60,7 @@ export class EditPersonComponent implements OnInit {
     this.personService.editPerson(this.person.personid, this.person)
       .subscribe(
         response => {
+          this.isSuccessful = true
         },
         error => {
           console.log(error);
@@ -68,7 +71,7 @@ export class EditPersonComponent implements OnInit {
         this.router.navigate(['/person']);
       }else  this.router.navigate(['/home']);
 
-    }, 1000);
+    }, 50);
   }
   updatePublished(status: any): void {
     const data = {
@@ -89,5 +92,18 @@ export class EditPersonComponent implements OnInit {
   }
   backClicked() {
     this._location.back();
+  }
+  checkIDNP(idnp: String|undefined):void {
+    if((idnp) && (idnp?.length==13)){
+      this.personService.checkIdnp(idnp)
+        .subscribe(
+          response => {
+            this.idnpExist=response;
+            console.log("IDNP responce ", response)
+          },
+          error => {
+            console.log(error);
+          });
+    }
   }
 }

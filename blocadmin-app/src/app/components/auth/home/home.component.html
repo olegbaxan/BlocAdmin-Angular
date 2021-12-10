@@ -1,11 +1,10 @@
 <div class="container" *ngIf="!tokenStorageService.isManager && !tokenStorageService.isAdmin">
 <div class="row pt-5">
   <div class="col-sm-6">
-    <div class="card bg-info">
+    <div class="card">
       <div class="card-body">
-<!--        <a href="/forgotpassword" routerLinkActive="active">Forgot your password?</a>-->
         <h5 class="card-title">User Information</h5>
-        <ul style="list-style-type:none;">
+        <ul style="list-style-type:none; font-size: 16px">
           <li>Username: {{person?.username}}</li>
           <li>Name: {{person?.name}}</li>
           <li>Surname: {{person?.surname}}</li>
@@ -14,7 +13,7 @@
           <li>Phone: {{person?.phone}}</li>
           <li>IDNP: {{person?.idnp}}</li>
         </ul>
-        <button type="submit" class="btn btn-light" data-bs-toggle="modalPerson" data-bs-target="#myModalPerson" (click) = "showEditPerson()">
+        <button type="submit" class="btn btn-primary" data-bs-toggle="modalPerson" data-bs-target="#myModalPerson" (click) = "showEditPerson()">
         Edit
       </button>
       </div>
@@ -39,7 +38,7 @@
 </div>
   <div class="row pt-5">
     <div class="col-sm-6">
-      <div class="card bg-info">
+      <div class="card">
         <div class="card-body">
           <h5 class="card-title">Last 10 Payments</h5>
           <ul style="list-style-type:none;" *ngFor="let pay of payments;let i=index">
@@ -63,6 +62,9 @@
               <button type="submit" class="btn" data-bs-toggle="modalS" data-bs-target="#myModalS" (click) = "showInvoicesS(i)">
                 {{invoice?.invoiceNumber}}
               </button>
+              <span *ngIf="invoice.fileInfo">
+              <a href="{{invoice.fileInfo?.url}}" download="{{invoice.fileInfo?.name}}">Download</a>
+                </span>
             </li>
 
           </ul>
@@ -85,39 +87,52 @@
 
         <!-- Modal body -->
         <div class="modal-body">
-          <div class="table" style="background-color:azure;">
+          <div class="table"  style="margin-left: auto;margin-right: auto">
             <table>
-            <tr class="align-content-start">
-              <td colspan="4">Invoice total sum:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.invoiceSum }}</b></td>
+            <tr>
+              <td colspan="5" style="text-align-last: end">Invoice total sum:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.invoiceSum }}</b></td>
             </tr>
             <tr>
-              <td colspan="4">Previous:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.meterDataPrevious }}</b></td>
+              <td colspan="5" style="text-align-last: end">Previous:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.meterDataPrevious }}</b></td>
             </tr>
             <tr>
-              <td colspan="4">Current:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.meterDataCurrent }}</b></td>
+              <td colspan="5" style="text-align-last: end">Current:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.meterDataCurrent }}</b></td>
             </tr>
             <tr>
-              <td colspan="4">Invoice Unit Price:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.unitPrice }}</b></td>
+              <td colspan="5" style="text-align-last: end">Invoice Unit Price:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.unitPrice }}</b></td>
             </tr>
             <tr>
-              <td colspan="4">Emitted Date:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.emittedDate }}</b></td>
+              <td colspan="5" style="text-align-last: end">Emitted Date:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.emittedDate }}</b></td>
             </tr>
             <tr>
-              <td colspan="4">Pay Term:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.payTill }}</b></td>
+              <td colspan="5" style="text-align-last: end">Pay Term:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.payTill }}</b></td>
             </tr>
+              <tr>
+                <td colspan="5" style="text-align-last: end">Payed Date:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.dateOfPay }}</b></td>
+              </tr>
             <tr>
-              <td colspan="4">Supplier:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.supplier?.supplierName }}</b></td>
+              <td colspan="5" style="text-align-last: end">Supplier:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.supplier?.supplierName }}</b></td>
             </tr>
             <tr *ngIf="selectedInvoice?.invoiceFile">
-              <td colspan="4">Invoice:</td>
-              <td colspan="5"><b>{{ selectedInvoice?.invoiceFile }}</b></td>
+              <td colspan="5" style="text-align-last: end">Invoice:</td>
+              <td colspan="2"></td>
+              <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoice?.invoiceFile }}</b></td>
             </tr>
 
             </table>
@@ -142,44 +157,57 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">{{ selectedInvoiceS?.invoiceNumber }}</h4>
+          <h4 class="modal-title">{{ selectedInvoiceS?.invoiceNumber }} {{selectedInvoiceS?.invoiceFileId}}</h4>
         </div>
 
         <!-- Modal body -->
         <div class="modal-body">
-          <div class="table" style="background-color:azure;">
+          <div class="table " style="margin-left: auto;margin-right: auto">
             <table>
               <tr class="align-content-start">
-                <td colspan="4">Invoice total sum:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.invoiceSum }}</b></td>
+                <td colspan="5" style="text-align-last: end">Invoice total sum:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.invoiceSum }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Previous:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.meterDataPrevious }}</b></td>
+                <td colspan="5" style="text-align-last: end">Previous:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.meterDataPrevious }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Current:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.meterDataCurrent }}</b></td>
+                <td colspan="5" style="text-align-last: end">Current:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.meterDataCurrent }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Invoice Unit Price:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.unitPrice }}</b></td>
+                <td colspan="5" style="text-align-last: end">Invoice Unit Price:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.unitPrice }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Emitted Date:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.emittedDate }}</b></td>
+                <td colspan="5" style="text-align-last: end">Emitted Date:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.emittedDate }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Pay Term:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.payTill }}</b></td>
+                <td colspan="5" style="text-align-last: end">Pay Term:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.payTill }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Supplier:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.supplier?.supplierName }}</b></td>
+                <td colspan="5" style="text-align-last: end">Payed Date:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.dateOfPay }}</b></td>
+              </tr>
+              <tr>
+                <td colspan="5" style="text-align-last: end">Supplier:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.supplier?.supplierName }}</b></td>
               </tr>
               <tr *ngIf="selectedInvoiceS?.invoiceFile">
-                <td colspan="4">Invoice:</td>
-                <td colspan="5"><b>{{ selectedInvoiceS?.invoiceFile }}</b></td>
+                <td colspan="5" >Invoice:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedInvoiceS?.invoiceFile }}</b></td>
               </tr>
 
             </table>
@@ -209,35 +237,42 @@
 
         <!-- Modal body -->
         <div class="modal-body">
-          <div class="table" style="background-color:azure;">
-            <table>
+          <div class="table">
+            <table style="margin-left: auto;margin-right: auto">
               <tr class="align-content-start">
-                <td colspan="4">Payment sum:</td>
-                <td colspan="5"><b>{{ selectedPayment?.sum }}</b></td>
+                <td colspan="5" style="text-align-last: end">Payment sum:</td>
+                <td colspan="3"></td>
+                <td colspan="4" style="text-align-last: start"><b>{{ selectedPayment?.sum }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Flat Number:</td>
-                <td colspan="5"><b>{{ selectedPayment?.flat?.flatNumber }}</b></td>
+                <td colspan="5"style="text-align-last: end">Flat Number:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedPayment?.flat?.flatNumber }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">City:</td>
-                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.city }}</b></td>
+                <td colspan="5" style="text-align-last: end">City:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedPayment?.flat?.building?.address?.city }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Raion:</td>
-                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.raion }}</b></td>
+                <td colspan="5" style="text-align-last: end">Raion:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedPayment?.flat?.building?.address?.raion }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">Street:</td>
-                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.street }}</b></td>
+                <td colspan="5" style="text-align-last: end">Street:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedPayment?.flat?.building?.address?.street }}</b></td>
               </tr>
               <tr>
-                <td colspan="4">House Number:</td>
-                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.houseNumber }}</b></td>
+                <td colspan="5" style="text-align-last: end">House Number:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedPayment?.flat?.building?.address?.houseNumber }}</b></td>
               </tr>
               <tr *ngIf="selectedPayment?.flat?.building?.address?.entranceNo">
-                <td colspan="4">Entrance:</td>
-                <td colspan="5"><b>{{ selectedPayment?.flat?.building?.address?.entranceNo }}</b></td>
+                <td colspan="5" style="text-align-last: end">Entrance:</td>
+                <td colspan="2"></td>
+                <td colspan="5" style="text-align-last: start"><b>{{ selectedPayment?.flat?.building?.address?.entranceNo }}</b></td>
               </tr>
 
             </table>
@@ -255,10 +290,10 @@
 </div>
 
 <!-- Modal Personal Invoices-->
-<div class="container text-center my-10">
-  <div class="modal" id="myModalPerson" [style.display]="showModalPerson ? 'block' : 'none'">
-    <div class="modal-dialog">
-      <div class="modal-content">
+<div class="container text-center my-5">
+  <div class="modal " id="myModalPerson" [style.display]="showModalPerson ? 'block' : 'none'">
+    <div class="modal-dialog ">
+      <div class="modal-content person-modal">
 
         <!-- Modal Header -->
         <div class="modal-header">
@@ -266,8 +301,7 @@
         </div>
 
         <!-- Modal body -->
-        <div class="col-12" *ngIf="person"
-             style="border: 2px solid; border-color: rgb(0, 38, 255); font-size: 20px;height: auto">
+        <div class="col-12 modal-body person-body" *ngIf="person">
           <h2 class="justify-content-center m-1">Person Atributes</h2>
           <form (ngSubmit)="updatePerson(playlistForm)" #playlistForm="ngForm">
             <div class="form-group form-group-sm col-sm-12 m-2 ">

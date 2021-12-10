@@ -35,6 +35,7 @@ export class MeterService {
   getBuildingFlats(id:Number|undefined): Observable<any> {
     return this.http.get(`${this.baseUrl}/buildingflats/${id}`);
   }
+
   getFlats(): Observable<any> {
     return this.http.get(`${this.baseUrl}/flats`);
   }
@@ -49,6 +50,10 @@ export class MeterService {
   }
   getBuildings(): Observable<any> {
     return this.http.get(`${this.baseUrl}/buildings`);
+  }
+  checkSerial(serial: String|undefined ): Observable<any> {
+    return this.http.get(`${this.baseUrl}/serial/${serial}`);
+
   }
 
 }

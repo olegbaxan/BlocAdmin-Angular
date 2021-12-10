@@ -6,6 +6,7 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {parameters} from "../../../constants/constants";
 import {el} from "@angular/platform-browser/testing/src/browser_util";
+import {AuthService} from "../../../services/auth.service";
 
 
 @Component({
@@ -31,8 +32,12 @@ export class ListPersonComponent implements OnInit {
   count = parameters.count;
   pageSize = parameters.pageSize;
   pageSizes = parameters.pageSizes;
+  showModal: boolean = false;
+  showModalBad: boolean = false;
+  personToDelete=new Person();
 
   constructor(private personService: PersonService,
+              private authService: AuthService,
               private route: ActivatedRoute,
               private router: Router,
               public tokenStorageService:TokenStorageService,)
@@ -75,8 +80,32 @@ export class ListPersonComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
+  deletePerson(id:Number|undefined){
+    this.showModal = false;
+    this.personService.deletePerson(id)
+      .subscribe(
+        response => {
+          this.retrievePersons();
+          console.log("Person delete");
+        },
+        error => {
+          console.log(error);
+          this.showModalBad=true;
+        });
+  }
+  showDeleteConfirm(person:Person) {
+    this.showModal = true; // Show-Hide Modal Check
+    this.personToDelete=person;
+  }
+  //Bootstrap Modal Close event
+  hideModals() {
+    this.showModal = false;
+    this.showModalBad=false;
+  }
+
 
   handlePageChange(event: number): void {
     this.page = event;

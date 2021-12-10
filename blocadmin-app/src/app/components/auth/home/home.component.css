@@ -1,6 +1,5 @@
 .modal-dialog {
   display: inline-block;
-  vertical-align: middle;
 }
 
 .modal .modal-content {
@@ -9,21 +8,29 @@
   -webkit-animation-duration: 0.5s;
   animation-name: modal-animation;
   animation-duration: 1s;
-}
-.li{
-font-size: 16px;
+
 }
 
 .modal-dialog,
 .modal-content {
-  /* 80% of window height */
-  height: 100%;
-  width: 130%;
+
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 5px;
+  border: 1px solid #888;
+  width: 90%; /* Could be more or less, depending on screen size */
 }
+
 
 .modal-body {
   /* 100% = dialog height, 120px = header + footer */
   max-height: calc(100% - 120px);
   overflow-y: scroll;
   align-content: normal;
+}
+.person-modal{
+
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 2px;
+  width: 101%; /* Could be more or less, depending on screen size */
 }

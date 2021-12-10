@@ -19,7 +19,8 @@ export class SupplierService {
   createSupplier(supplier: any): Observable<any>{
     return  this.http.post(this.baseUrl,supplier);
   }
-  editSupplier(id:number, supplier:Object){
+
+    editSupplier(id: Number | undefined, supplier: Object){
     return  this.http.put(this.baseUrl,supplier);
   }
 

@@ -12,4 +12,6 @@ export class Person {
   phone?:String;
   mobile?:String;
   idnp?:String;
+  title?:String;
+  published?:String;
 }

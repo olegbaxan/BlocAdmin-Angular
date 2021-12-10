@@ -8,5 +8,6 @@ export class Building {
   flats?: Number;
   entranceNo?: Number;
   address?: Address;
-
+  title?:String;
+  published?:String;
 }

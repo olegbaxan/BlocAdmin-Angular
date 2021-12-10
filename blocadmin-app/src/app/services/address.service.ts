@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Address} from "../model/Address";
 
 
 const endpoint = 'https://jsonplaceholder.typicode.com/posts';
@@ -29,7 +30,8 @@ export class AddressService {
   createAddress(address: any): Observable<any>{
     return  this.http.post(this.baseUrl,address);
   }
-  editAddress(id:number, address:Object){
+
+    editAddress(id: Number | undefined, address: Address|undefined){
     return  this.http.put(this.baseUrl,address);
   }
   searchAddress(search:any){

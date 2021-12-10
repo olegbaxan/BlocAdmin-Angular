@@ -19,7 +19,8 @@ export class BuildingService {
   createBuilding(building: any): Observable<any>{
     return  this.http.post(this.baseUrl,building);
   }
-  editBuilding(id:number, building:Object){
+
+    editBuilding(id: Number | undefined, building: Object){
     return  this.http.put(this.baseUrl,building);
   }
 

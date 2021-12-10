@@ -25,4 +25,6 @@ export class Invoice {
   fileInfo?:any;
   hasMeter:boolean=true;
   countData?:Number;
+  title?:String;
+  published?:String;
 }

@@ -15,5 +15,6 @@ export class Flat {
   person?: Person[];
   building?: Building;
   meters?: Meter[];
-
+  title?:String;
+  published?:String;
 }

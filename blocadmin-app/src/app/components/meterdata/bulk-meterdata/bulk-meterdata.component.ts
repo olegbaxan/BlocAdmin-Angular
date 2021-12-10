@@ -11,7 +11,7 @@ import {SupplierService} from "../../../services/supplier.service";
 import {TypeOfMeterInvoice} from "../../../model/TypeOfMeterInvoice";
 import {FlatService} from "../../../services/flat.service";
 import {Building} from "../../../model/Building";
-import {Location} from '@angular/common';
+import {DatePipe, Location} from '@angular/common';
 import {Invoice} from "../../../model/Invoice";
 import {Flat} from "../../../model/Flat";
 import {Meter} from "../../../model/Meter";
@@ -34,7 +34,7 @@ export class BulkMeterdataComponent implements OnInit {
   suppliers: Supplier[] = [];
   selectedSupplier:Supplier|undefined;
   buildings: Building[] = [];
-  selectedBuildings:Building|undefined;
+  selectedBuildings:Building[]|undefined;
   invoices: Invoice[] = [];
   selectedInvoice: Invoice|undefined;
   flats: Flat[] = [];
@@ -70,7 +70,8 @@ export class BulkMeterdataComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private _location: Location,
-              public tokenStorageService:TokenStorageService,)
+              public tokenStorageService:TokenStorageService,
+              public datepipe: DatePipe)
   {
     this.tokenStorageService.getPersonData();
     this.metersdata=[];
@@ -93,7 +94,7 @@ export class BulkMeterdataComponent implements OnInit {
           console.log(error);
         });
     setTimeout(()=>{
-      this.retrieveMeterData();
+      this.getFilteredMeters(this.selectedBuildings);
     }, 1000);
   }
   getMeterDataById(id:number):Observable<any> {
@@ -113,17 +114,7 @@ export class BulkMeterdataComponent implements OnInit {
 
     return params;
   }
-  // private getAllTypeOfMeterAndInvoice(): void {
-  //   this.meterService.getTypeOfMeterInvoice()
-  //     .subscribe(
-  //       response => {
-  //         this.typeOfMeterAndInvoice = response;
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  //   // return response;
-  // }
+
   getAllSuppliers(): void {
     this.meterService.getSuppliers()
       .subscribe(
@@ -161,31 +152,7 @@ export class BulkMeterdataComponent implements OnInit {
         });
     // return response;
   }
-  getAllFlats(): void {
-    const entrance = new Map<number, number>();
-    // @ts-ignore
-    this.meterdataService.getFlatsByBuilding(this.selectedBuildings.buildingid)
-      .subscribe(
-        response => {
-          this.flats=[];
-          for (let item in response) {
-            response[item].bindName = response[item].flatNumber + " " + response[item].entrance + " " + response[item].floor;
-            entrance.set(response[item].entrance, response[item].entrance)
-            this.flats.push(response[item]);
-          }
-          if (entrance.size > 1) {
-            this.hasEntrances = true;
-            this.entrances = Array.from(entrance.keys());
-          }
-          console.log("this.flats ", this.flats);
-          console.log("entrance ", entrance);
-          console.log("selectedEntrance ", this.selectedEntrance);
-        },
-        error => {
-          console.log(error);
-        });
-    // return response;
-  }
+
   getAllBuildings(): void {
     this.flatService.getBuildings()
       .subscribe(
@@ -204,22 +171,30 @@ export class BulkMeterdataComponent implements OnInit {
         });
     // return response;
   }
-  retrieveMeterData() {
-    // if(this.selectedTypeOfMeterAndInvoice.id!=null){
-    //   this.title=this.selectedTypeOfMeterAndInvoice.id.toString();
-    // }
+  getFilteredMeters(buildings:Building[]|undefined) {
+    console.log("Selected Buildings", buildings);
+    if (buildings!=null){
+      for (let i=0;i<buildings?.length;i++){
+        this.metersdata=[];
+        this.retrieveMeterData(buildings[i]);
+      }
+    }
+  }
+  retrieveMeterData(building:Building) {
+
     this.supp=this.selectedSupplier?.supplierName;
-    this.build=this.selectedBuildings?.buildingid;
-console.log("This.supp",this.supp);
-console.log("This.build",this.build);
+    this.build=building.buildingid;
+    console.log("BuildingID",this.build)
     const params = this.getRequestParams(this.supp,this.build);
 
     this.meterdataService.getAllNew(params)
       .subscribe(
         response => {
           const {meterData} = response;
-          this.metersdata = meterData;
-          this.findsum(this.metersdata)
+          for (let item in meterData){
+            this.metersdata?.push(meterData[item]);
+            this.findsum(this.metersdata)
+          }
           console.log("MeterDataretr",this.metersdata);
         },
         error => {
@@ -232,11 +207,11 @@ console.log("This.build",this.build);
       if ((meterdata.currentValue - meterdata.previousValue) > 0) {
 
         const invoice = new Invoice();
-        invoice.invoiceNumber = meterdata?.meter?.serial + "/" + new Date().getFullYear() +new Date().getMonth() +new Date().getDay() +new Date().getHours() +new Date().getMinutes();
-        invoice.meterDataCurrent = meterdata.currentValue;
+        invoice.invoiceNumber = this.selectedInvoice?.invoiceNumber + "/" + this.datepipe.transform(Date.now(),"YYYY/MM/dd/HH:MM:SS"
+          +"/"+meterdata.meter?.flat?.flatNumber+"/"+meterdata.meter?.flat?.flatid);        invoice.meterDataCurrent = meterdata.currentValue;
         invoice.meterDataPrevious = meterdata.previousValue;
         // @ts-ignore
-        invoice.invoiceSum = Math.round((meterdata.currentValue - meterdata.previousValue) * this.selectedInvoice?.unitPrice);
+        invoice.invoiceSum = ((meterdata.currentValue - meterdata.previousValue) * this.selectedInvoice?.unitPrice).toFixed(2);
         invoice.unitPrice = this.selectedInvoice?.unitPrice;
         if (invoice.payTill) {
           invoice.payTill = this.selectedInvoice?.payTill;
@@ -253,7 +228,7 @@ console.log("This.build",this.build);
 
 
         this.invoices.push(invoice);
-        meterdata.status = this.status[3];
+        meterdata.status = this.status[2];
         console.log("meterdata:t", meterdata);
         console.log("invoices:t", invoice);
 
@@ -266,18 +241,6 @@ console.log("This.build",this.build);
               console.log(error);
             });
         this.meterdataService.editMeterData(meterdata.meterdataid, meterdata)
-          .subscribe(
-            response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error);
-            });
-
-        // @ts-ignore
-        meterdata.meter.flat.wallet=meterdata.meter?.flat?.wallet-invoice.invoiceSum;
-        // @ts-ignore
-        this.flatService.editFlat(meterdata.meter?.flat?.flatid, meterdata.meter?.flat)
           .subscribe(
             response => {
               console.log(response);
@@ -310,10 +273,6 @@ console.log("This.build",this.build);
     }
     console.log("Total",this.total)
   }
-  handlePageChange(event: number): void {
-    this.page = event;
-    this.retrieveMeterData();
-  }
 
   async onChangeEvent(event: any,id: any){
 
@@ -326,21 +285,6 @@ console.log("This.build",this.build);
 
   }
 
-  handlePageSizeChange(event: any): void {
-    this.pageSize = event.target.value;
-    this.page = 1;
-    this.retrieveMeterData();
-  }
-  getPerson() {
-    const personKey = this.tokenStorageService.getPerson();
-    if (personKey) {
-      this.isLoggedIn=true;
-      this.loggedUserID=personKey.id;
-      this.loggedUserName=personKey.username;
-    }else {
-      this.router.navigate(['/login']);
-    }
-  }
   resetValues() {
     this.selectedBuildings = undefined;
     this.selectedSupplier = undefined;

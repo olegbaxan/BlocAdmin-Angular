@@ -8,6 +8,8 @@ import {Person} from "../../../model/Person";
 import {Meter} from "../../../model/Meter";
 import {Building} from "../../../model/Building";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {Location} from "@angular/common";
+import {Flat} from "../../../model/Flat";
 
 @Component({
   selector: 'app-edit-flat',
@@ -17,21 +19,26 @@ import {TokenStorageService} from "../../../services/token-storage.service";
 export class EditFlatComponent implements OnInit {
 
   title="Edit building form";
-  flat:any;
+  flat=new Flat();
   message = '';
-  persons: any = [];
-  buildings: any = [];
-  meters: any = [];
+  persons: Array<Person> = [];
+  buildings: Array<Building> = [];
+  meters: Array<Meter> = [];
   selectedPerson: Person[] = [];
   selectedMeters: Meter[] = [];
-  selectedBuilding: Building|undefined;
+  selectedBuilding=new Building();
+  availableFlats:number[]=[];
+  isSuccessful=false;
+entranceExist=false;
+
   constructor(private flatService: FlatService,
               private personService: PersonService,
               private buildingService: BuildingService,
               private meterService: MeterService,
               private route: ActivatedRoute,
               private router: Router,
-              public tokenStorageService:TokenStorageService,)
+              public tokenStorageService:TokenStorageService,
+              private _location: Location,)
   {
     this.tokenStorageService.getPersonData();
   }
@@ -43,6 +50,7 @@ export class EditFlatComponent implements OnInit {
     this.getAllPersons();
     this.getAllBuildings();
     this.getAllMeters();
+
   }
   private getAllPersons(): void {
     this.flatService.getPersons()
@@ -50,17 +58,13 @@ export class EditFlatComponent implements OnInit {
         response => {
           this.persons=[];
           for (let item in response) {
-            console.log("response roles ",response[item].roles)
-            console.log("response person ",response[item].name)
-
-            for (var i in response[item].roles) {
+              for (var i in response[item].roles) {
               if (response[item].roles[i].name === "ROLE_USER") {
                 response[item].bindName = response[item].name + " " + response[item].surname;
                 this.persons.push(response[item]);
               }
             }
           }
-          console.log("Persons",this.persons);
         },
         error => {
           console.log(error);
@@ -97,7 +101,19 @@ export class EditFlatComponent implements OnInit {
             this.buildings.push(response[item]);
 
           }
-          console.log("this.buildings ",this.buildings );
+        },
+        error => {
+          console.log(error);
+        });
+    // return response;
+  }
+  getAvailableFlatsByBuilding(): void {
+    let buildingId=this.selectedBuilding?.buildingid;
+    this.flatService.getAvailableFlatsByBuildingId(buildingId)
+      .subscribe(
+        response => {
+          this.availableFlats = [];
+          this.availableFlats=response;
         },
         error => {
           console.log(error);
@@ -116,6 +132,7 @@ export class EditFlatComponent implements OnInit {
             data.meter[i].bindName=data.meter[i].serial+" "+data.meter[i].serial;
           }
           if (data.building.address.entranceNo){
+            this.entranceExist=true;
             data.building.bindName=data.building.address.city+" "+data.building.address.raion+" "+
               data.building.address.street+" "+ data.building.address.houseNumber+"/"+data.building.address.entranceNo;
           }else{
@@ -125,7 +142,8 @@ export class EditFlatComponent implements OnInit {
           this.selectedBuilding=data.building;
           this.selectedPerson=data.person;
           this.selectedMeters=data.meter;
-          console.log("BuildingSelect",this.selectedBuilding);
+          this.getAvailableFlatsByBuilding();
+
         },
         error => {
           console.log(error);
@@ -134,12 +152,11 @@ export class EditFlatComponent implements OnInit {
   updateFlat(playlistForm: { reset: () => void; }): void {
     this.flat.building=this.selectedBuilding;
     this.flat.person=this.selectedPerson;
-    this.flat.meter=this.selectedMeters;
-    console.log("FLAT",this.flat.building);
-    console.log("Build",this.flat);
+    this.flat.meters=this.selectedMeters;
     this.flatService.editFlat(this.flat.flatid, this.flat)
       .subscribe(
         response => {
+          this.isSuccessful = true
           this.message = 'The flat was updated successfully!';
         },
         error => {
@@ -157,7 +174,7 @@ export class EditFlatComponent implements OnInit {
       published: status
     };
 
-    this.flatService.editFlat(this.flat.id, data)
+    this.flatService.editFlat(this.flat.flatid, data)
       .subscribe(
         response => {
           this.flat.published = status;
@@ -166,6 +183,9 @@ export class EditFlatComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+  backClicked() {
+    this._location.back();
   }
 
 }

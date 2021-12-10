@@ -14,6 +14,9 @@ import {InvoiceService} from "../../../services/invoice.service";
 import {MeterdataService} from "../../../services/meterdata.service";
 import {Status} from "../../../model/Status";
 import {waitForAsync} from "@angular/core/testing";
+import {Location} from "@angular/common";
+import {Router} from "@angular/router";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-add-payment',
@@ -32,12 +35,16 @@ export class AddPaymentComponent implements OnInit {
   showMsg= false;
   selectedPerson: any = [];
   selectedFlats: any;
+  isSuccessful = false;
 
   constructor(private paymentService: PaymentsService,
               private flatService: FlatService,
               private meterdataService: MeterdataService,
               private invoiceService: InvoiceService,
-              public tokenStorageService: TokenStorageService,) {
+              public tokenStorageService: TokenStorageService,
+              private _location: Location,
+              private router: Router,
+              private authService:AuthService,) {
     this.tokenStorageService.getPersonData();
     this.payments = [];
     this.flats = [];
@@ -62,6 +69,7 @@ export class AddPaymentComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
     // return response;
   }
@@ -93,6 +101,7 @@ export class AddPaymentComponent implements OnInit {
           for (let item in response) {
             response[item].bindName = response[item].invoiceId + " " + response[item].emittedDate;
             this.invoices.push(response[item]);
+
           }
           console.log("invoices:t", this.invoices);
         },
@@ -121,69 +130,12 @@ export class AddPaymentComponent implements OnInit {
       .subscribe(
         response => {
           console.log(response);
-          this.submitted = true;
-          this.checkAndPayInvoices();
+          this.isSuccessful = true;
+          this.router.navigate(['/payments']);
         },
         error => {
           console.log(error);
         });
-  }
-
-  checkAndPayInvoices(): void {
-    for (let i=0;i<this.invoices.length;i++) {
-      console.log("Iteration = ",i);
-      // getFlatByFLatID
-      // @ts-ignore
-      this.flatService.getById(this.invoices[i]?.meter?.flat?.flatid)
-        .subscribe(
-          data => {
-            this.updatedFlat = data;
-            console.log("InvoiceID",this.invoices[i].invoiceId);
-            console.log("UpdatedFlatbef",this.updatedFlat?.wallet);
-            console.log("InvoceSum",this.invoices[i].invoiceSum);
-            //check and withdrow money acording to invoicesum
-            // @ts-ignore
-            if (this.updatedFlat?.wallet > this.invoices[i]?.invoiceSum) {
-              console.log("UpdatedFlat",this.updatedFlat);
-              console.log("Invoice",this.invoices[i]);
-              console.log("Wallet ",this.updatedFlat?.wallet,this.invoices[i].invoiceSum);
-              //UpdateFlatWallet
-              // @ts-ignore
-              this.updatedFlat?.wallet = this.updatedFlat?.wallet - this.invoices[i].invoiceSum;
-              console.log("After withdrow invoiceId ? flat ?",this.invoices[i].invoiceId,this.updatedFlat?.wallet);
-
-              //UpdateInvoiceStatus
-              this.invoices[i].status = this.status[2];//Invoice_payed
-              // @ts-ignore
-              this.flatService.editFlat(this.updatedFlat?.flatid,this.updatedFlat)
-                .subscribe(
-                  response => {
-                    console.log("Flat updated",this.updatedFlat?.wallet)
-                    this.message = 'The flat '+this.updatedFlat?.flatNumber+' was updated successfully!';
-                    this.showMsg= true;
-                    this.updatedFlat=undefined;
-                    // @ts-ignore
-                    this.invoiceService.editInvoice(this.invoices[i]?.invoiceId,this.invoices[i])
-                      .subscribe(response => {
-                          console.log("Invoice updated",this.invoices[i].status);
-                          this.message = 'The Status was updated successfully!';
-                          this.showMsg= true;
-                        },
-                        error => {
-                          console.log(error);
-                        })
-                  },
-                  error => {
-                    console.log(error);
-                  });
-            }
-          },
-          error => {
-            console.log(error);
-          });//get flat by ID
-
-    }//for loop
-
   }
 
   //  checkAndPayInvoices(): void {
@@ -311,6 +263,9 @@ export class AddPaymentComponent implements OnInit {
           console.log(error);
         });
     // return response;
+  }
+  backClicked() {
+    this._location.back();
   }
 
 }

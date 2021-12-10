@@ -6,6 +6,7 @@ import {SupplierService} from "../../../services/supplier.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {BuildingService} from "../../../services/building.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-list-building',
@@ -29,6 +30,7 @@ export class ListBuildingComponent implements OnInit {
   constructor(private buildingService: BuildingService,
               private route: ActivatedRoute,
               private router: Router,
+              private authService: AuthService,
               public tokenStorageService:TokenStorageService,)
   {
     this.tokenStorageService.getPersonData();
@@ -69,6 +71,7 @@ export class ListBuildingComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
   handlePageChange(event: number): void {

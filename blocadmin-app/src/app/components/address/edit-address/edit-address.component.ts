@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AddressService} from "../../../services/address.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Address} from "../../../model/Address";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-edit-address',
@@ -10,12 +12,14 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class EditAddressComponent implements OnInit {
 
   title="Edit address form";
-  address:any;
+  address= new Address;
   message = '';
+  isSuccessful = false;
   constructor(
     private addressService: AddressService,
     private route: ActivatedRoute,
     private router: Router,
+    private _location: Location,
 
   ) {}
 
@@ -38,10 +42,10 @@ export class EditAddressComponent implements OnInit {
         });
   }
   updateAddress(playlistForm: { reset: () => void; }): void {
-    this.addressService.editAddress(this.address.addressId, this.address)
+    this.addressService.editAddress(this.address?.addressid, this.address)
       .subscribe(
         response => {
-          // console.log(response);
+          this.isSuccessful = true
           this.message = 'The address was updated successfully!';
         },
         error => {
@@ -54,19 +58,23 @@ export class EditAddressComponent implements OnInit {
   }
   updatePublished(status: any): void {
     const data = {
-      title: this.address.title,
-      description: this.address.city,
+      title: this.address?.title,
+      description: this.address?.city,
       published: status
     };
 
-    this.addressService.editAddress(this.address.id, data)
+    this.addressService.editAddress(this.address?.addressid, data)
       .subscribe(
         response => {
-          this.address.published = status;
+          // @ts-ignore
+          this.address?.published = status;
           console.log(response);
         },
         error => {
           console.log(error);
         });
+  }
+  backClicked() {
+    this._location.back();
   }
 }

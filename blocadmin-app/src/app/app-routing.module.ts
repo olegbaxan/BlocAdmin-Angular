@@ -35,10 +35,19 @@ import {ListPaymentComponent} from "./components/payment/list-payment/list-payme
 import {BulkaddMeterdataComponent} from "./components/meterdata/bulkadd-meterdata/bulkadd-meterdata.component";
 import {ForgotPasswordComponent} from "./components/auth/forgot-password/forgot-password.component";
 import {PasswordResetComponent} from "./components/auth/password-reset/password-reset.component";
+import {UploadImagesComponent} from "./components/file/upload-images/upload-images.component";
+import {BoardBlocadminComponent} from "./components/auth/board-blocadmin/board-blocadmin.component";
+import {BoardAdminComponent} from "./components/auth/board-admin/board-admin.component";
+import {ChangePasswordComponent} from "./components/auth/change-password/change-password.component";
 
 const routes: Routes = [
   { path: 'password/forgot/reset', component: PasswordResetComponent },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: 'changepassword', component: ChangePasswordComponent },
+  { path: 'files', component: UploadImagesComponent },
+
+  { path: 'home/blocadmin', component: BoardBlocadminComponent ,data : { role : 'ROLE_BLOCADMIN'}},
+  { path: 'home/admin', component: BoardAdminComponent },
   { path: 'home', component: HomeComponent },
   {path: 'address/add', component: AddAddressComponent },
   {path: 'address/:id', component: EditAddressComponent},

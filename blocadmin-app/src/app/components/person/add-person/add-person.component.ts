@@ -6,6 +6,7 @@ import {PersonService} from "../../../services/person.service";
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../../services/token-storage.service";
+import {window} from "rxjs/operators";
 
 @Component({
   selector: 'app-add-person',
@@ -95,13 +96,15 @@ export class AddPersonComponent implements OnInit {
         console.log(data);
         this.isSuccessful = true;
         this.isSignUpFailed = false;
-        this.router.navigate(['/login']);
       },
       err => {
         this.errorMessage = err.error.message;
         this.isSignUpFailed = true;
       }
     );
+    setTimeout(()=>{
+      this.router.navigate(['/login']);
+    }, 2000);
   }
   newPerson(): void {
     this.submitted = false;

@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../../services/token-storage.service";
 import {MeterData} from "../../../model/MeterData";
 import {MeterdataService} from "../../../services/meterdata.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-list-meterdata',
@@ -27,6 +28,7 @@ export class ListMeterdataComponent implements OnInit {
   pageSizes = parameters.pageSizes;
   constructor(private meterdataService: MeterdataService,
               private route: ActivatedRoute,
+              private authService: AuthService,
               private router: Router,
               public tokenStorageService:TokenStorageService,)
   {
@@ -68,6 +70,7 @@ export class ListMeterdataComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.authService.logout(error.error.error);
         });
   }
   handlePageChange(event: number): void {
