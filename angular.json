@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "blocadmin-app": {
+    "BlocAdminAngular": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/blocadmin-app",
+            "outputPath": "dist/BlocAdminAngular",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -71,19 +71,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "blocadmin-app:build",
+            "browserTarget": "BlocAdminAngular:build",
             "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "blocadmin-app:build:production"
+              "browserTarget": "BlocAdminAngular:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "blocadmin-app:build"
+            "browserTarget": "BlocAdminAngular:build"
           }
         },
         "test": {
@@ -121,16 +121,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "blocadmin-app:serve"
+            "devServerTarget": "BlocAdminAngular:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "blocadmin-app:serve:production"
+              "devServerTarget": "BlocAdminAngular:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "blocadmin-app"
+  "defaultProject": "BlocAdminAngular"
 }
